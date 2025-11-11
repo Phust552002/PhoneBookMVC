@@ -35,7 +35,6 @@
             overflow: hidden;
         }
 
-            /* Background với overlay */
             body::before {
                 content: '';
                 position: fixed;
@@ -50,7 +49,6 @@
                 z-index: -2;
             }
 
-            /* Overlay tối để text dễ đọc */
             body::after {
                 content: '';
                 position: fixed;
@@ -58,11 +56,10 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0,0,0,0.2); /* đen mờ 20% */
+                background: rgba(0,0,0,0.2); 
                 z-index: -1;
             }
 
-            /* Fallback nếu không có background image */
             body.no-background::before {
                 background: linear-gradient(135deg, #b8e0d2 0%, #95e1d3 100%);
             }
@@ -131,7 +128,6 @@
             z-index: 1;
         }
 
-        /* Logo công ty */
         .company-logo {
             width: 120px;
             height: auto;
@@ -142,7 +138,6 @@
             object-fit: contain;
         }
 
-        /* Fallback icon nếu không có logo */
         .login-icon {
             width: 80px;
             height: 80px;
@@ -372,7 +367,6 @@
             font-size: 13px;
         }
 
-        /* Responsive */
         @@media (max-width: 576px) {
             .login-container
 
@@ -406,7 +400,6 @@
                 <img src="~/images/sagsLogo.png" alt="Company Logo" class="company-logo" id="companyLogo"
                      onerror="this.style.display='none'; document.getElementById('fallbackIcon').style.display='flex';" />
 
-                <!-- Icon fallback nếu không có logo -->
                 <div class="login-icon" id="fallbackIcon" style="display: none;">
                     <i class="fas fa-address-book"></i>
                 </div>
@@ -463,14 +456,11 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <script>
-        // Kiểm tra background image có tồn tại không
         const img = new Image();
         img.src = '/images/backgroundSags.jpg';
         img.onerror = function() {
             document.body.classList.add('no-background');
         };
-
-        // Toggle password visibility
         document.getElementById('togglePassword').addEventListener('click', function() {
             const passwordInput = document.getElementById('passwordInput');
             const icon = this;
@@ -486,14 +476,12 @@
             }
         });
 
-        // Loading animation on submit
         document.getElementById('loginForm').addEventListener('submit', function() {
             const btn = document.getElementById('btnLogin');
             btn.classList.add('loading');
             btn.innerHTML = '';
         });
 
-        // Auto focus on error
         window.addEventListener('load', function() {
             const errorInput = document.querySelector('.input-validation-error');
             if (errorInput) {

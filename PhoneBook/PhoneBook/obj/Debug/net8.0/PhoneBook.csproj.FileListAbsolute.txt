@@ -982,3 +982,5 @@ C:\Users\huynh\Documents\GitHub\PhoneBook\PhoneBook\PhoneBook\bin\Debug\net8.0\S
 C:\Users\huynh\Documents\GitHub\PhoneBook\PhoneBook\PhoneBook\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Diagnostics.PerformanceCounter.dll
 C:\Users\Admin\Documents\GitHub\PhoneBook\PhoneBook\PhoneBook\obj\Debug\net8.0\PhoneBook.Resources.Views.Shared.EditorTemplates.EmployeeEditTemplate.en.resources
 C:\Users\Admin\Documents\GitHub\PhoneBook\PhoneBook\PhoneBook\obj\Debug\net8.0\PhoneBook.Resources.Views.Shared.EditorTemplates.EmployeeEditTemplate.vi.resources
+C:\Users\huynh\Documents\GitHub\PhoneBook\PhoneBook\PhoneBook\obj\Debug\net8.0\PhoneBook.Resources.Views.Shared.EditorTemplates.EmployeeEditTemplate.en.resources
+C:\Users\huynh\Documents\GitHub\PhoneBook\PhoneBook\PhoneBook\obj\Debug\net8.0\PhoneBook.Resources.Views.Shared.EditorTemplates.EmployeeEditTemplate.vi.resources

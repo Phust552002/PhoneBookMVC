@@ -38,14 +38,6 @@ namespace PhoneBook.Controllers
             return View(departments);
         }
 
-        //lấy danh sách nhân viên theo phòng ban
-        [HttpGet]
-        public async Task<IActionResult> GetEmployees(int departmentId)
-        {
-            var employees = await _repo.GetEmployeesByDepartmentAsync(departmentId);
-            return Json(employees);
-        }
-
         [HttpGet]
         public async Task<IActionResult> GetDepartments()
         {

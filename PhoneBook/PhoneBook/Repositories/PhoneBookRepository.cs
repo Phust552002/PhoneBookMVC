@@ -17,18 +17,14 @@ public class PhoneBookRepository : IPhoneBookRepository
 
     private IDbConnection CreateConnection() => new SqlConnection(_connectionString);
 
-    // 🔹 Lấy danh sách phòng ban và dựng cây
+    //SP: Sel_GetDepartments
     public async Task<List<Department>> GetDepartmentsAsync()
     {
-        const string sql = @"
-            SELECT DepartmentId, DepartmentName, ParentId, Level, RootName, Status
-            FROM H0_Departments
-            WHERE Status =3
-            ORDER BY Sortby";
-
         using var conn = CreateConnection();
-        var all = (await conn.QueryAsync<Department>(sql)).ToList();
-
+        var all = (await conn.QueryAsync<Department>(
+            "Sel_GetDepartments",
+            commandType: CommandType.StoredProcedure
+        )).ToList();
 
         // Dựng cây (Tree View)
         var lookup = all.ToDictionary(d => d.DepartmentId);
@@ -44,171 +40,98 @@ public class PhoneBookRepository : IPhoneBookRepository
         return roots;
     }
 
-    //Lấy nhân viên theo phòng ban
+    //SP: Sel_GetEmployeesByDepartment
     public async Task<List<Employee>> GetEmployeesByDepartmentAsync(int departmentId)
     {
-        const string sql = @"
-        ;WITH cte AS (
-            SELECT DepartmentId 
-            FROM H0_Departments 
-            WHERE DepartmentId = @departmentId
-            UNION ALL
-            SELECT d.DepartmentId
-            FROM H0_Departments d
-            INNER JOIN cte ON d.ParentId = cte.DepartmentId
-        )
-        SELECT DISTINCT 
-            v.UserId, 
-            v.UserName, 
-            v.EmployeeCode, 
-            v.FullName, 
-            v.WorkingPhone, 
-            v.HandPhone, 
-            v.BusinessEmail, 
-            v.Status,
-            v.Sortby,
-            v.LevelPosition
-        FROM View_H0_DepartmentEmployee v
-        INNER JOIN cte ON v.DepartmentId = cte.DepartmentId
-        WHERE v.Status = 1
-        ORDER BY v.Sortby,v.LevelPosition";
-
         using var conn = CreateConnection();
-        var result = (await conn.QueryAsync<Employee>(sql, new { departmentId })).ToList();
+        var result = (await conn.QueryAsync<Employee>(
+            "Sel_GetEmployeesByDepartment",
+            new { DepartmentId = departmentId, StatusList = "1" },
+            commandType: CommandType.StoredProcedure
+        )).ToList();
         return result;
     }
 
+    //SP: Sel_GetAllEmployees
     public async Task<List<Employee>> GetAllEmployeesAsync()
     {
-        const string sql = @"
-        SELECT 
-            v.UserId, v.UserName, v.EmployeeCode, v.FullName, 
-            v.WorkingPhone, v.HandPhone, v.BusinessEmail, v.Status, v.Sortby, v.LevelPosition
-        FROM View_H0_DepartmentEmployee v
-        WHERE v.Status = 1
-        ORDER BY v.Sortby,v.LevelPosition";
-
         using var connection = CreateConnection();
-        var employees = await connection.QueryAsync<Employee>(sql);
-        return employees.ToList();
+        var employees = (await connection.QueryAsync<Employee>(
+            "Sel_GetAllEmployees",
+            new { StatusList = "1" },
+            commandType: CommandType.StoredProcedure
+        )).ToList();
+        return employees;
     }
 
-    //  Lấy tất cả nhân viên Status = 0
+    //SP: Sel_GetAllEmployees
     public async Task<List<Employee>> GetAllInactiveEmployeesAsync()
     {
-        const string sql = @"
-        SELECT 
-            v.UserId, v.UserName, v.EmployeeCode, v.FullName, 
-            v.WorkingPhone, v.HandPhone, v.BusinessEmail, v.Status, v.Sortby, v.LevelPosition
-        FROM View_H0_DepartmentEmployee v
-        WHERE v.Status IN (0, 11, 12, 13)
-        ORDER BY v.Sortby, v.LevelPosition";
-
         using var connection = CreateConnection();
-        var employees = await connection.QueryAsync<Employee>(sql);
-        return employees.ToList();
+        var employees = (await connection.QueryAsync<Employee>(
+            "Sel_GetAllEmployees",
+            new { StatusList = "0,11,12,13" },
+            commandType: CommandType.StoredProcedure
+        )).ToList();
+        return employees;
     }
-    // Lấy nhân viên đã nghỉ theo phòng ban
+
+    //P: Sel_GetEmployeesByDepartment
     public async Task<List<Employee>> GetInactiveEmployeesByDepartmentAsync(int departmentId)
     {
-        const string sql = @"
-        ;WITH cte AS (
-            SELECT DepartmentId 
-            FROM H0_Departments 
-            WHERE DepartmentId = @departmentId
-            UNION ALL
-            SELECT d.DepartmentId
-            FROM H0_Departments d
-            INNER JOIN cte ON d.ParentId = cte.DepartmentId
-        )
-        SELECT DISTINCT 
-            v.UserId, 
-            v.UserName, 
-            v.EmployeeCode, 
-            v.FullName, 
-            v.WorkingPhone, 
-            v.HandPhone, 
-            v.BusinessEmail, 
-            v.Status,
-            v.Sortby,
-            v.LevelPosition
-        FROM View_H0_DepartmentEmployee v
-        INNER JOIN cte ON v.DepartmentId = cte.DepartmentId
-        WHERE v.Status IN (0, 11, 12, 13)
-        ORDER BY v.Sortby, v.LevelPosition";
-
         using var conn = CreateConnection();
-        var result = (await conn.QueryAsync<Employee>(sql, new { departmentId })).ToList();
+        var result = (await conn.QueryAsync<Employee>(
+            "Sel_GetEmployeesByDepartment",
+            new { DepartmentId = departmentId, StatusList = "0,11,12,13" },
+            commandType: CommandType.StoredProcedure
+        )).ToList();
         return result;
     }
 
-    // Lấy thông tin nhân viên theo username - Login - left join for account profile (future plan)
+    //SP: Sel_GetEmployeeByUsername
     public async Task<Employee> GetEmployeeByUsernameAsync(string username)
     {
-        const string sql = @"
-            SELECT 
-                v.UserId, v.UserName, v.EmployeeCode, v.FullName, 
-                v.Password, v.PositionName,
-                v.WorkingPhone, v.HandPhone, v.BusinessEmail, v.Status,
-                de.DepartmentId
-            FROM View_H0_DepartmentEmployee v
-            LEFT JOIN H0_DepartmentEmployee de ON v.UserId = de.UserId
-            WHERE v.UserName = @Username AND v.Status = 1 ";
-
         using var conn = CreateConnection();
-        var employee = await conn.QueryFirstOrDefaultAsync<Employee>(sql, new { Username = username });
+        var employee = await conn.QueryFirstOrDefaultAsync<Employee>(
+            "Sel_GetEmployeeByUsername",
+            new { Username = username },
+            commandType: CommandType.StoredProcedure
+        );
         return employee;
     }
 
+    //SP: Upd_UpdateEmployee
     public async Task<bool> UpdateEmployeeAsync(Employee employee)
     {
-            using var connection = CreateConnection();
+        using var connection = CreateConnection();
 
-            var query = @"
-                    UPDATE View_H0_DepartmentEmployee 
-                    SET 
-                        FullName = @FullName,
-                        WorkingPhone = @WorkingPhone,
-                        HandPhone = @HandPhone,
-                        BusinessEmail = @BusinessEmail
-                    WHERE UserId = @UserId";
-
-            var parameters = new
+        var result = await connection.QueryFirstOrDefaultAsync<int>(
+            "Upd_UpdateEmployee",
+            new
             {
                 employee.UserId,
                 employee.FullName,
                 employee.WorkingPhone,
                 employee.HandPhone,
-                employee.BusinessEmail,
-            };
+                employee.BusinessEmail
+            },
+            commandType: CommandType.StoredProcedure
+        );
 
-            var rowsAffected = await connection.ExecuteAsync(query, parameters);
-            return rowsAffected > 0;
-        
+        return result > 0;
     }
+
+    //SP: Sel_GetUserRoles
     public async Task<List<int>> GetUserRolesAsync(int userId)
     {
-        using (var connection = new SqlConnection(_connectionString))
-        {
-            await connection.OpenAsync();
+        using var connection = CreateConnection();
 
-            var query = "SELECT RoleId FROM UserRoles WHERE UserId = @UserId";
+        var roles = (await connection.QueryAsync<int>(
+            "Sel_GetUserRoles",
+            new { UserId = userId },
+            commandType: CommandType.StoredProcedure
+        )).ToList();
 
-            using (var command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@UserId", userId);
-
-                var roles = new List<int>();
-                using (var reader = await command.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        roles.Add(reader.GetInt32(0));
-                    }
-                }
-
-                return roles;
-            }
-        }
+        return roles;
     }
-    }
+}
