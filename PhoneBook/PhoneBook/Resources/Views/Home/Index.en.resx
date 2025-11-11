@@ -189,4 +189,10 @@
   <data name="TotalEmployees" xml:space="preserve">
     <value>Total Employees</value>
   </data>
+  <data name="ActiveEmployees" xml:space="preserve">
+    <value>Active Employees</value>
+  </data>
+  <data name="InactiveEmployees" xml:space="preserve">
+    <value>Inactive Employees</value>
+  </data>
 </root>

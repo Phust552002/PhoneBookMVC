@@ -93,7 +93,56 @@ public class PhoneBookRepository : IPhoneBookRepository
         return employees.ToList();
     }
 
-    // Lấy thông tin nhân viên theo username - nav
+    //  Lấy tất cả nhân viên Status = 0
+    public async Task<List<Employee>> GetAllInactiveEmployeesAsync()
+    {
+        const string sql = @"
+        SELECT 
+            v.UserId, v.UserName, v.EmployeeCode, v.FullName, 
+            v.WorkingPhone, v.HandPhone, v.BusinessEmail, v.Status, v.Sortby, v.LevelPosition
+        FROM View_H0_DepartmentEmployee v
+        WHERE v.Status IN (0, 11, 12, 13)
+        ORDER BY v.Sortby, v.LevelPosition";
+
+        using var connection = CreateConnection();
+        var employees = await connection.QueryAsync<Employee>(sql);
+        return employees.ToList();
+    }
+    // Lấy nhân viên đã nghỉ theo phòng ban
+    public async Task<List<Employee>> GetInactiveEmployeesByDepartmentAsync(int departmentId)
+    {
+        const string sql = @"
+        ;WITH cte AS (
+            SELECT DepartmentId 
+            FROM H0_Departments 
+            WHERE DepartmentId = @departmentId
+            UNION ALL
+            SELECT d.DepartmentId
+            FROM H0_Departments d
+            INNER JOIN cte ON d.ParentId = cte.DepartmentId
+        )
+        SELECT DISTINCT 
+            v.UserId, 
+            v.UserName, 
+            v.EmployeeCode, 
+            v.FullName, 
+            v.WorkingPhone, 
+            v.HandPhone, 
+            v.BusinessEmail, 
+            v.Status,
+            v.Sortby,
+            v.LevelPosition
+        FROM View_H0_DepartmentEmployee v
+        INNER JOIN cte ON v.DepartmentId = cte.DepartmentId
+        WHERE v.Status IN (0, 11, 12, 13)
+        ORDER BY v.Sortby, v.LevelPosition";
+
+        using var conn = CreateConnection();
+        var result = (await conn.QueryAsync<Employee>(sql, new { departmentId })).ToList();
+        return result;
+    }
+
+    // Lấy thông tin nhân viên theo username - Login - left join for account profile (future plan)
     public async Task<Employee> GetEmployeeByUsernameAsync(string username)
     {
         const string sql = @"
@@ -111,23 +160,6 @@ public class PhoneBookRepository : IPhoneBookRepository
         return employee;
     }
 
-    // 🔹 Lấy thông tin nhân viên theo UserId
-    public async Task<Employee> GetEmployeeByIdAsync(int userId)
-    {
-        const string sql = @"
-            SELECT 
-                v.UserId, v.UserName, v.EmployeeCode, v.FullName, 
-                v.Password, v.PositionName,
-                v.WorkingPhone, v.HandPhone, v.BusinessEmail, v.Status,
-                de.DepartmentId
-            FROM View_H0_DepartmentEmployee v
-            LEFT JOIN H0_DepartmentEmployee de ON v.UserId = de.UserId
-            WHERE v.UserId = @UserId AND v.Status =1 ";
-
-        using var conn = CreateConnection();
-        var employee = await conn.QueryFirstOrDefaultAsync<Employee>(sql, new { UserId = userId });
-        return employee;
-    }
     public async Task<bool> UpdateEmployeeAsync(Employee employee)
     {
             using var connection = CreateConnection();

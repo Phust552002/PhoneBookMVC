@@ -222,10 +222,18 @@
                     <!-- logo và text -->
                     <h1 class="navbar-brand-text">PHONEBOOK</h1>
                 </a>
-
+                @{
+                    var fullName = User.FindFirst("FullName")?.Value;
+                    var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                    var isAdmin = User.FindFirst("IsAdmin")?.Value == "True";
+                }
                 <div class="d-flex align-items-center ms-auto">
                     <div class="user-info me-2">
-                        <div class="user-name">@User.FindFirst("FullName")?.Value</div>
+                        <div class="user-name">
+                            @fullName - @userId @if (isAdmin) {
+                            <span class="text-danger fw-bold">- Admin</span>
+                        }
+                    </div>
                         <div class="user-position">@User.FindFirst("PositionName")?.Value</div>
                     </div>
 

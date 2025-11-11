@@ -189,4 +189,10 @@
   <data name="TotalEmployees" xml:space="preserve">
     <value>Tổng số nhân viên:</value>
   </data>
+  <data name="ActiveEmployees" xml:space="preserve">
+    <value>Danh sách Nhân viên đang hoạt động</value>
+  </data>
+  <data name="InactiveEmployees" xml:space="preserve">
+    <value>Danh sách Nhân viên không hoạt động</value>
+  </data>
 </root>

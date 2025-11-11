@@ -2,15 +2,19 @@
 
 public interface IPhoneBookRepository
 {
-    // Existing methods
+    // BuildTree
     Task<List<Department>> GetDepartmentsAsync();
+    // active employees 
     Task<List<Employee>> GetEmployeesByDepartmentAsync(int departmentId);
     Task<List<Employee>> GetAllEmployeesAsync();
-
-    // New methods for authentication
+    // Inactive employees
+    Task<List<Employee>> GetAllInactiveEmployeesAsync();
+    Task<List<Employee>> GetInactiveEmployeesByDepartmentAsync(int departmentId);
+    // Authentication
     Task<Employee> GetEmployeeByUsernameAsync(string username);
-    Task<Employee> GetEmployeeByIdAsync(int userId);
+    //Update
     Task<bool> UpdateEmployeeAsync(Employee employee);
+    //Add roles
     Task<List<int>> GetUserRolesAsync(int userId);
 
 }

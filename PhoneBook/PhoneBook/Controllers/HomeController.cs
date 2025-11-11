@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol.Core.Types;
 using PhoneBook.Models;
 using System;
 using System.Collections.Generic;
@@ -91,7 +92,20 @@ namespace PhoneBook.Controllers
                 var employees = await _repo.GetAllEmployeesAsync();
                 return Json(employees);
         }
+        // Lấy nhân viên đã nghỉ việc
+        [HttpGet]
+        public async Task<IActionResult> GetAllInactiveEmployees()
+        {
+                var employees = await _repo.GetAllInactiveEmployeesAsync();
+                return Json(employees);
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> GetInactiveEmployeesByDepartment(int departmentId)
+        {
+                var employees = await _repo.GetInactiveEmployeesByDepartmentAsync(departmentId);
+                return Json(employees);
+        }
         //Đọc dữ liệu từ request 
         //Cố gắng gán giá trị cho từng thuộc tính của employee
         //Kiểm tra các attribute validation trên model(như[Required], [StringLength], [Range], v.v.)

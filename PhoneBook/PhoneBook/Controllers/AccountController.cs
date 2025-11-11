@@ -48,7 +48,7 @@ namespace PhoneBook.Controllers
                 return View(model);
             }
             var employeeRole = await _authService.GetUserRolesAsync(employee.UserId);
-            var adminRoleIds = new[] {1,2,4,8,10}; // Các UserId có quyền truy cập hệ thống
+            var adminRoleIds = new[] {1,2,4,8,10,20}; // Các RoleId có quyền truy cập hệ thống
             bool isAdmin = employeeRole.Any(roleId => adminRoleIds.Contains(roleId));
             // Tạo claims
             var claims = new List<Claim>
