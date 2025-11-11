@@ -195,4 +195,13 @@
   <data name="InactiveEmployees" xml:space="preserve">
     <value>Danh sách Nhân viên không hoạt động</value>
   </data>
+  <data name="EditEmployeeTitle" xml:space="preserve">
+    <value>Chỉnh sửa thông tin nhân viên</value>
+  </data>
+  <data name="TotalInactiveEmployees" xml:space="preserve">
+    <value>Tổng số nhân viên đã nghỉ:</value>
+  </data>
+  <data name="UserId" xml:space="preserve">
+    <value>UserId</value>
+  </data>
 </root>

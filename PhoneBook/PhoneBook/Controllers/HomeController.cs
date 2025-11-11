@@ -106,11 +106,7 @@ namespace PhoneBook.Controllers
                 var employees = await _repo.GetInactiveEmployeesByDepartmentAsync(departmentId);
                 return Json(employees);
         }
-        //Đọc dữ liệu từ request 
-        //Cố gắng gán giá trị cho từng thuộc tính của employee
-        //Kiểm tra các attribute validation trên model(như[Required], [StringLength], [Range], v.v.)
-        //Lưu kết quả vào ModelState:
-        //Nếu dữ liệu hợp lệ → ModelState.IsValid = true
+
         [HttpPost]
         public async Task<IActionResult> UpdateEmployee([DataSourceRequest] DataSourceRequest request, Employee employee)
         {
@@ -120,31 +116,26 @@ namespace PhoneBook.Controllers
                 ModelState.AddModelError("", "You do not have permission to update employee information.");
                 return Json(new[] { employee }.ToDataSourceResult(request, ModelState));
             }  
-            
             if (employee == null || employee.UserId <= 0)
             {
                 return Json(new[] { employee }.ToDataSourceResult(request));
             }
-
             if (!ModelState.IsValid)
-                {
-                    return Json(new[] { employee }.ToDataSourceResult(request, ModelState));
-                }
+            {
+                return Json(new[] { employee }.ToDataSourceResult(request, ModelState));
+            }
 
-                // Update employee
                 var result = await _repo.UpdateEmployeeAsync(employee);
 
             if (result)
-                {
-
+            {
                 return Json(new[] { employee }.ToDataSourceResult(request, ModelState));
-                }
+            }
             else
-                {
-                    ModelState.AddModelError("", "Failed to update employee");
-                    return Json(new[] { employee }.ToDataSourceResult(request, ModelState));
-                }
-
+            {
+                ModelState.AddModelError("", "Failed to update employee");
+                return Json(new[] { employee }.ToDataSourceResult(request, ModelState));
+            }
         }
 
         public IActionResult SetLanguage(string culture, string returnUrl = "/")

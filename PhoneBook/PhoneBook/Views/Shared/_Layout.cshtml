@@ -32,56 +32,46 @@
     <style>
         .navbar-custom {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 0.75rem 1rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            padding: 0.3rem 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
         .navbar-brand {
             display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            padding: 5px 10px;
-            border-radius: 8px;
-            transition: all 0.3s;
+            align-items: flex-end;
+            gap: 20px;
+            padding-top: 4px;
         }
-
-            .navbar-brand:hover {
-                background: rgba(255, 255, 255, 0.1);
-                transform: translateY(-2px);
-            }
-
-        /* Logo trong navbar */
         .navbar-logo {
-            height: 50px;
+            height: 40px;
             width: auto;
             max-width: 150px;
-            object-fit: contain;
+            transform: scale(1.25);
+            transform-origin: left center;
         }
-
-        .navbar-logo-white {
-            height: 45px;
-            width: auto;
-            max-width: 150px;
-            object-fit: contain;
-        }
-
         .navbar-brand-text {
             color: white;
             font-weight: 700;
             font-size: 20px;
-            margin: 0;
-            white-space: nowrap;
+            margin-bottom: 2px;
         }
 
-        .navbar-brand-icon {
-            font-size: 28px;
+        .navbar-toggler {
+            border: none;
         }
 
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.8)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+        .navbar-logo {
+            height: 40px; 
+            width: auto;
+            max-width: 150px;
+            transform: scale(1.25); 
+            transform-origin: left center;
+        }
         .user-info {
             color: white;
-            margin-right: 20px;
-            font-size: 14px;
             text-align: right;
         }
 
@@ -93,77 +83,30 @@
         .user-position {
             font-size: 12px;
             opacity: 0.9;
-            margin-top: 2px;
         }
 
         .btn-logout {
             background-color: rgba(255, 255, 255, 0.95);
             color: #764ba2;
             border: none;
-            padding: 8px 24px;
+            padding: 8px 20px;
             border-radius: 6px;
             font-weight: 600;
-            transition: all 0.3s;
             font-size: 14px;
+            transition: all 0.3s;
         }
 
             .btn-logout:hover {
-                background-color: #ffffff;
+                background-color: #fff;
                 color: #667eea;
                 transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
             }
-
-        body {
-            padding-top: 70px;
-            background-color: #f5f7fa;
-        }
-
-        .navbar-custom {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1030;
-        }
-
-        /* Responsive */
-        @@media (max-width: 768px) {
-            .navbar-logo, .navbar-logo-white
-
-        {
-            height: 35px;
-            max-width: 120px;
-        }
-
-        .navbar-brand-text {
-            font-size: 16px;
-        }
-
-        .user-info {
-            margin-right: 10px;
-            font-size: 12px;
-        }
-
-        .user-name {
-            font-size: 13px;
-        }
-
-        .user-position {
-            font-size: 11px;
-        }
-
-        .btn-logout {
-            padding: 6px 16px;
-            font-size: 13px;
-        }
-        }
 
         .lang-toggle {
             border: 1px solid rgba(255, 255, 255, 0.4);
             border-radius: 8px;
             overflow: hidden;
-            backdrop-filter: blur(4px);
         }
 
         .btn-lang {
@@ -173,32 +116,50 @@
             padding: 5px 14px;
             border: none;
             transition: all 0.3s ease;
-            font-size: 14px;
         }
-
-            .btn-lang:hover {
-                background: rgba(255, 255, 255, 0.15);
-            }
 
             .btn-lang.active {
                 background: rgba(255, 255, 255, 0.9);
                 color: #764ba2;
-                font-weight: 700;
-                box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
             }
+        @@media (max-width: 992px) {
+            .user-info
 
-        @@media (max-width: 768px) {
-            .navbar-brand-text {
-                display: none;
-            }
+        {
+            text-align: left;
+            margin-bottom: 10px;
+        }
 
-            .btn-lang {
-                padding: 4px 10px;
-                font-size: 13px;
-            }
-            .user-position {
-                display: none;
-            }
+        .navbar-brand-text {
+            font-size: 16px;
+        }
+
+        .btn-logout {
+            font-size: 13px;
+            padding: 6px 14px;
+        }
+
+        .btn-lang {
+            padding: 4px 10px;
+            font-size: 13px;
+        }
+
+        }
+
+        @@media (max-width: 576px) {
+            .user-position
+
+        {
+            display: none;
+        }
+
+        .navbar-logo {
+            height: 35px;
+        }
+
+        .user-name {
+            font-size: 13px;
+        }
 
         }
     </style>
@@ -212,27 +173,21 @@
                     <img src="~/images/sagsLogo.png" alt="Company Logo" class="navbar-logo"
                          onerror="this.style.display='none'; document.getElementById('navbarTextFallback').style.display='flex';" />
 
-
-                    <!-- Fallback -->
                     <div id="navbarTextFallback" style="display: none; align-items: center; gap: 10px;">
                         <span class="navbar-brand-icon">📱</span>
                         <h1 class="navbar-brand-text">PhoneBook</h1>
                     </div>
 
-                    <!-- logo và text -->
                     <h1 class="navbar-brand-text">PHONEBOOK</h1>
                 </a>
                 @{
                     var fullName = User.FindFirst("FullName")?.Value;
                     var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-                    var isAdmin = User.FindFirst("IsAdmin")?.Value == "True";
                 }
                 <div class="d-flex align-items-center ms-auto">
                     <div class="user-info me-2">
                         <div class="user-name">
-                            @fullName - @userId @if (isAdmin) {
-                            <span class="text-danger fw-bold">- Admin</span>
-                        }
+                            @fullName - @userId
                     </div>
                         <div class="user-position">@User.FindFirst("PositionName")?.Value</div>
                     </div>
@@ -242,7 +197,6 @@
                         <button id="btnLangEn" class="btn btn-lang">EN</button>
                     </div>
 
-                    <!-- Form đăng xuất -->
                     <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline ms-2">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="btn btn-logout">Đăng xuất</button>
@@ -254,9 +208,7 @@
 
     @RenderBody()
     <script>
-        // Lưu cookie culture + reload
         function setLanguage(lang) {
-            // Gán culture + UICulture vào cookie
             document.cookie = `.AspNetCore.Culture=c=${lang}|uic=${lang}; path=/;`;
             location.reload();
         }

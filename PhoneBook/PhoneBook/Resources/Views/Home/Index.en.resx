@@ -195,4 +195,13 @@
   <data name="InactiveEmployees" xml:space="preserve">
     <value>Inactive Employees</value>
   </data>
+  <data name="EditEmployeeTitle" xml:space="preserve">
+    <value>Edit Employee Information</value>
+  </data>
+  <data name="TotalInactiveEmployees" xml:space="preserve">
+    <value>Total Inactive Employees:</value>
+  </data>
+  <data name="UserId" xml:space="preserve">
+    <value>UserId</value>
+  </data>
 </root>

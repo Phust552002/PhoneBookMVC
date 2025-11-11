@@ -11,7 +11,6 @@ using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 builder.Services
@@ -27,9 +26,6 @@ builder.Services.AddMvc().AddJsonOptions(options => options.JsonSerializerOption
 builder.Services.AddKendo();
 builder.Services.AddDbContext<HRMDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("HRMDb")));
-// EF DbContext
-
-// Authentication (cookie)
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -51,12 +47,8 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-
-
-// Register repositories/services
 builder.Services.AddScoped<IPhoneBookRepository, PhoneBookRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-//builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
 
 var app = builder.Build();
@@ -66,15 +58,12 @@ var localizationOptions = new RequestLocalizationOptions()
     .SetDefaultCulture("vi-VN")
     .AddSupportedCultures(supportedCultures)
     .AddSupportedUICultures(supportedCultures);
-
-//  đọc culture từ cookie 
 localizationOptions.RequestCultureProviders.Insert(0, new CookieRequestCultureProvider
 {
     CookieName = "culture"
 });
 
 app.UseRequestLocalization(localizationOptions);
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

@@ -47,8 +47,6 @@ namespace PhoneBook.Services
 
             return employee;
         }
-
-        // Fixed: Thêm await keyword
         public async Task<List<int>> GetUserRolesAsync(int userId)
         {
             var roles = await _repo.GetUserRolesAsync(userId);
