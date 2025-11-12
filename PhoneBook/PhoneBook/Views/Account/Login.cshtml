@@ -477,12 +477,33 @@
         });
 
         document.getElementById('loginForm').addEventListener('submit', function() {
+            const rememberMe = document.querySelector('input[name="RememberMe"]').checked;
+
+            if (rememberMe) {
+                // Mã hóa đơn giản
+                const username = document.querySelector('input[name="Username"]').value;
+                const password = document.querySelector('input[name="Password"]').value;
+
+                localStorage.setItem('savedUsername', username);
+                localStorage.setItem('savedPassword', btoa(password)); // Base64 encoding
+            } else {
+                localStorage.removeItem('savedUsername');
+                localStorage.removeItem('savedPassword');
+            }
             const btn = document.getElementById('btnLogin');
             btn.classList.add('loading');
             btn.innerHTML = '';
         });
 
         window.addEventListener('load', function() {
+            const savedUsername = localStorage.getItem('savedUsername');
+            const savedPassword = localStorage.getItem('savedPassword');
+
+            if (savedUsername && savedPassword) {
+                document.querySelector('input[name="Username"]').value = savedUsername;
+                document.querySelector('input[name="Password"]').value = atob(savedPassword);
+                document.querySelector('input[name="RememberMe"]').checked = true;
+            }
             const errorInput = document.querySelector('.input-validation-error');
             if (errorInput) {
                 errorInput.focus();

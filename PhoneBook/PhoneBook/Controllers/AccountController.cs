@@ -86,6 +86,7 @@ namespace PhoneBook.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            Response.Cookies.Delete(".AspNetCore.Cookies");
             return RedirectToAction("Login", "Account");
         }
         [HttpGet]
