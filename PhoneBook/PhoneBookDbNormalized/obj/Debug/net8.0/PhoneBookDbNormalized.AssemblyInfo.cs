@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PhoneBookDbNormalized")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ffa4cb972e30b4b4b261600443ed6126865a768a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c1ac00381cdf3bbf8b84c35bb2cc871fecd9c142")]
 [assembly: System.Reflection.AssemblyProductAttribute("PhoneBookDbNormalized")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PhoneBookDbNormalized")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
