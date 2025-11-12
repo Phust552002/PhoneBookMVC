@@ -1,4 +1,4 @@
-1. Sel_GetDepartments - Lấy danh sách phòng ban
+-- Sel_GetDepartments - Lấy danh sách phòng ban
 
 CREATE PROCEDURE [dbo].[Sel_GetDepartments]
 AS
@@ -18,8 +18,8 @@ BEGIN
 END
 GO
 
- 2. Sel_GetEmployeesByDepartment - Lấy nhân viên theo phòng ban (bao gồm phòng ban con)
-ALTER PROCEDURE [dbo].[Sel_GetEmployeesByDepartment]
+--Sel_GetEmployeesByDepartment - Lấy nhân viên theo phòng ban (bao gồm phòng ban con)
+Create PROCEDURE [dbo].[Sel_GetEmployeesByDepartment]
     @DepartmentId INT,
     @StatusList NVARCHAR(100) = NULL
 AS
@@ -57,14 +57,14 @@ BEGIN
 END
 GO
 
-3. Sel_GetAllEmployees - Lấy tất cả nhân viên đang làm việc
+-- Sel_GetAllEmployees - Lấy tất cả nhân viên đang làm việc
 USE [HRM]
 GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-ALTER PROCEDURE [dbo].[Sel_GetAllEmployees]
+CREATE PROCEDURE [dbo].[Sel_GetAllEmployees]
     @StatusList NVARCHAR(100) = NULL
 AS
 BEGIN
@@ -89,7 +89,7 @@ BEGIN
 END
 
 
-4 Sel_GetEmployeeByUsername - Lấy thông tin nhân viên theo username (Login)
+ -- Sel_GetEmployeeByUsername - Lấy thông tin nhân viên theo username (Login)
 -- =============================================
 
 
@@ -119,10 +119,10 @@ BEGIN
 END
 GO
 
-5. Upd_UpdateEmployee - Cập nhật thông tin nhân viên
+-- Upd_UpdateEmployee - Cập nhật thông tin nhân viên
 
 
-CREATE OR ALTER PROCEDURE [dbo].[Upd_UpdateEmployee]
+CREATE Procedure [dbo].[Upd_UpdateEmployee]
     @UserId INT,
     @FullName NVARCHAR(255),
     @WorkingPhone NVARCHAR(50),
@@ -132,21 +132,20 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    UPDATE H0_Users
+    UPDATE View_H0_DepartmentEmployee
     SET 
         FullName = @FullName,
         WorkingPhone = @WorkingPhone,
         HandPhone = @HandPhone,
-        BusinessEmail = @BusinessEmail,
-        ModifiedDate = GETDATE()
+        BusinessEmail = @BusinessEmail
     WHERE UserId = @UserId;
 
     SELECT @@ROWCOUNT AS RowsAffected;
 END
 GO
 
-
-8. Sel_GetUserRoles - Lấy danh sách quyền của user
+select* from View_H0_DepartmentEmployee
+-- Sel_GetUserRoles - Lấy danh sách quyền của user
 
 CREATE PROCEDURE [dbo].[Sel_GetUserRoles]
     @UserId INT
