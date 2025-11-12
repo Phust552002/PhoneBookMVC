@@ -1299,3 +1299,4 @@ wwwroot\lib\kendo\js\messages\kendo.messages.zh-CN.min.js
 wwwroot\lib\kendo\js\messages\kendo.messages.zh-HK.min.js
 wwwroot\lib\kendo\js\messages\kendo.messages.zh-TW.min.js
 wwwroot\images\logoSagsnoWord.png
+wwwroot\images\logoSagsnoWord.ico
