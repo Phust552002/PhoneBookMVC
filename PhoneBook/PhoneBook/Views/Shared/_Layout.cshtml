@@ -1,5 +1,5 @@
 ﻿@using System.Security.Claims
-
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,7 +32,7 @@
 
     <style>
         .navbar-custom {
-            background: #2196F3; 
+            background: linear-gradient(90deg, #0079bf, #5067c5);
             padding: 0.3rem 1rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
@@ -40,23 +40,23 @@
         .navbar-brand {
             display: flex;
             align-items: flex-end;
-            gap: 50px;
-            padding-top: 4px;
+            gap: 40px;
+            padding-top: 2px;
         }
 
         .navbar-logo {
-            height: 40px;
+            height:60px;
             width: auto;
             max-width: 150px;
             transform: scale(1.25);
             transform-origin: left center;
+            margin: 0px 0px 0px 0px;
         }
 
         .navbar-brand-text {
             color: #ffffff;
             font-weight: 700;
-            font-size: 24px;
-            margin-bottom: 2px;
+            font-size: 28px;
         }
 
         .navbar-toggler {
@@ -74,7 +74,7 @@
 
         .user-name {
             font-weight: 600;
-            font-size: 15px;
+            font-size: 14px;
             color: #ffffff;
         }
 
@@ -86,7 +86,7 @@
 
         .btn-logout {
             background-color: rgba(255, 255, 255, 0.95);
-            color: #2196F3;
+            color: #0079bf;
             border: none;
             padding: 8px 20px;
             border-radius: 6px;
@@ -97,7 +97,7 @@
 
             .btn-logout:hover {
                 background-color: #fff;
-                color: #1976D2; 
+                color: #0079bf;
                 transform: translateY(-2px);
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
             }
@@ -214,7 +214,7 @@
 
                     <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline ms-2">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-logout">Đăng xuất</button>
+                        <button type="submit" class="btn btn-logout">@Localizer["LogoutTitle"]</button>
                     </form>
                 </div>
             </div>
@@ -224,6 +224,12 @@
     @RenderBody()
     <script>
         function setLanguage(lang) {
+            const currentCulture = document.cookie.match(/\.AspNetCore\.Culture=c=([^|]+)/);
+            const currentLang = currentCulture ? currentCulture[1] : "vi-VN";
+            if (currentLang === lang) {
+                console.log("Ngôn ngữ đã được chọn, không reload lại trang.");
+                return;
+            }
             document.cookie = `.AspNetCore.Culture=c=${lang}|uic=${lang}; path=/;`;
             location.reload();
         }
@@ -231,7 +237,6 @@
         $(document).ready(function () {
             const culture = document.cookie.match(/\.AspNetCore\.Culture=c=([^|]+)/);
             const lang = culture ? culture[1] : "vi-VN";
-
             kendo.culture(lang);
 
             if (lang === "vi-VN") $("#btnLangVi").addClass("active");

@@ -984,3 +984,7 @@ C:\Users\Admin\Documents\GitHub\PhoneBook\PhoneBook\PhoneBook\obj\Debug\net8.0\P
 C:\Users\Admin\Documents\GitHub\PhoneBook\PhoneBook\PhoneBook\obj\Debug\net8.0\PhoneBook.Resources.Views.Shared.EditorTemplates.EmployeeEditTemplate.vi.resources
 C:\Users\huynh\Documents\GitHub\PhoneBook\PhoneBook\PhoneBook\obj\Debug\net8.0\PhoneBook.Resources.Views.Shared.EditorTemplates.EmployeeEditTemplate.en.resources
 C:\Users\huynh\Documents\GitHub\PhoneBook\PhoneBook\PhoneBook\obj\Debug\net8.0\PhoneBook.Resources.Views.Shared.EditorTemplates.EmployeeEditTemplate.vi.resources
+C:\Users\Admin\Documents\GitHub\PhoneBook\PhoneBook\PhoneBook\obj\Debug\net8.0\PhoneBook.Resources.Views.Account.Login.en.resources
+C:\Users\Admin\Documents\GitHub\PhoneBook\PhoneBook\PhoneBook\obj\Debug\net8.0\PhoneBook.Resources.Views.Account.Login.vi.resources
+C:\Users\Admin\Documents\GitHub\PhoneBook\PhoneBook\PhoneBook\obj\Debug\net8.0\PhoneBook.Resources.Views.Shared._Layout.en.resources
+C:\Users\Admin\Documents\GitHub\PhoneBook\PhoneBook\PhoneBook\obj\Debug\net8.0\PhoneBook.Resources.Views.Shared._Layout.vi.resources

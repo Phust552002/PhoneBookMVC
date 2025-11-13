@@ -12,46 +12,46 @@
 <style>
     /* ====== OVERRIDE KENDO CSS VARIABLES ====== */
     :root {
-        --kendo-color-primary: #2196F3;
-        --kendo-color-primary-hover: #1976D2;
-        --kendo-color-primary-active: #1565C0;
+        --kendo-color-primary: #0079bf;
+        --kendo-color-primary-hover: #5067c5;
+        --kendo-color-primary-active: #5067c5;
         --kendo-color-on-primary: #ffffff;
     }
 
     /* Override trực tiếp cho nút Save */
     .k-button-solid-primary,
     .k-grid-update.k-button-solid-primary {
-        border-color: #2196F3 !important;
+        border-color: #0079bf !important;
         color: #fff !important;
-        background-color: #2196F3 !important;
+        background-color: #0079bf !important;
     }
 
     .k-button-solid-primary:hover,
     .k-grid-update.k-button-solid-primary:hover {
-        border-color: #1976D2 !important;
-        background-color: #1976D2 !important;
+        border-color: #5067c5 !important;
+        background-color: #5067c5 !important;
     }
 
     .k-button-solid-primary:active,
     .k-grid-update.k-button-solid-primary:active {
-        border-color: #1565C0 !important;
-        background-color: #1565C0 !important;
+        border-color: #0079bf !important;
+        background-color: #0079bf !important;
     }
 
-    /* Override cho nút Edit trong grid */
+    /* Override cho nút Edit  */
     .k-grid .k-grid-edit.k-button {
-        color: #2196F3 !important;
+        color: #0079bf !important;
         background-color: transparent !important;
         border-color: transparent !important;
     }
 
     .k-grid .k-grid-edit.k-button:hover {
-        color: #1976D2 !important;
+        color: #0079bf !important;
         background-color: #e3f2fd !important;
     }
 
     .k-grid .k-grid-edit .k-button-icon {
-        color: #2196F3 !important;
+        color: #0079bf !important;
     }
 
     .k-grid .k-grid-edit:hover .k-button-icon {
@@ -120,7 +120,7 @@
 
     .spinner {
         border: 4px solid #f3f3f3;
-        border-top: 4px solid #2196F3;
+        border-top: 4px solid #0079bf;
         border-radius: 50%;
         width: 50px;
         height: 50px;
@@ -134,7 +134,7 @@
     }
 
     .loading-text {
-        color: #2196F3;
+        color: #0079bf;
         font-weight: 600;
         font-size: 14px;
     }
@@ -163,7 +163,7 @@
 
     /* ====== EMPLOYEE COUNT ====== */
     .employee-count {
-        background: #2196F3 100%;
+        background: #0079bf 100%;
         color: #fff;
         padding: 6px 12px;
         border-radius: 4px;
@@ -201,7 +201,7 @@
             padding: 4px 6px;
         }
         #deptTree .k-selected > .k-in {
-            background-color: #2196F3 !important;
+            background-color:#0079bf !important;
             color: white !important;
         }
 
@@ -253,7 +253,7 @@
     }
 
     .k-treeview .k-selected {
-    background-color: #2196F3 !important;
+    background-color: linear-gradient(90deg, #0079bf, #5067c5);
     color: white !important;
 }
     .k-grid-header th {
@@ -314,14 +314,14 @@
         }
 
         .k-tabstrip .k-item.k-active {
-            background: #2196F3;
-            border: 1px solid #2196F3;
+            background: #0079bf;
+            border: 1px solid#0079bf;
         }
 
         .k-tabstrip .k-item.k-active .k-link {
-            background: #2196F3;
+            background: #0079bf;
             color: white;
-            border-bottom: 2px solid #2196F3;
+            border-bottom: 2px solid#0079bf;
         }
 
         .k-tabstrip .k-item:not(.k-active):hover {
@@ -330,7 +330,7 @@
 
         .k-tabstrip .k-item:not(.k-active):hover .k-link {
             background: #e3f2fd;
-            color: #1976D2;
+            color: #0079bf;
         }
 
         .k-tabstrip > .k-tabstrip-content,
@@ -399,7 +399,7 @@
     }
 
     .k-window.k-grid-edit-form .k-window-titlebar {
-        background: #2196F3 100%;
+        background:linear-gradient(90deg, #0079bf, #5067c5);
         color: #fff;
         border-radius: 8px 8px 0 0;
         padding: 15px 20px;
@@ -427,7 +427,7 @@
         width: 65%;
     }
     k-window-title{
-        color = #fff;
+        color :#fff;
     }
     .k-window.k-grid-edit-form .k-textbox {
         width: 100%;
@@ -450,16 +450,16 @@
     }
 
     .k-window.k-grid-edit-form .k-grid-update {
-        background: #2196F3;
-        border-color: #2196F3;
+        background: linear-gradient(90deg, #0079bf, #5067c5);
+        border-color: #0079bf;
         color: white;
         padding: 8px 20px;
         font-weight: 600;
     }
 
     .k-window.k-grid-edit-form .k-grid-update:hover {
-        background: #1976D2;
-        border-color: #1976D2;
+        background:#0079bf;
+        border-color: #0079bf;
     }
 
     .k-window.k-grid-edit-form .k-grid-cancel {
@@ -480,7 +480,7 @@
         justify-content: center;      
         align-items: center;
         text-align: center;
-        background:#2196F3;
+        background:linear-gradient(90deg, #0079bf, #5067c5);
         color: #fff;
         font-weight: 600;
         font-size: 16px;
@@ -692,7 +692,7 @@
                         .DataSource(ds => ds
                             .Ajax()
                             .ServerOperation(false)
-                            .PageSize(15)
+                            .PageSize(30)
                             .Model(m => m.Id(e => e.UserId))
                             .Read(read => read.Action("GetAllEmployees", "Home").Type(HttpVerbs.Get))
                             .Update(update => update.Action("UpdateEmployee", "Home").Type(HttpVerbs.Post))

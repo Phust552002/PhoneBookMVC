@@ -1300,3 +1300,5 @@ wwwroot\lib\kendo\js\messages\kendo.messages.zh-HK.min.js
 wwwroot\lib\kendo\js\messages\kendo.messages.zh-TW.min.js
 wwwroot\images\logoSagsnoWord.png
 wwwroot\images\logoSagsnoWord.ico
+wwwroot\images\FlagUK.png
+wwwroot\images\FlagVN.png

@@ -4,6 +4,8 @@
     ViewData["Title"] = "Đăng nhập";
     Layout = null;
 }
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+
 @{
     Context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
     Context.Response.Headers["Pragma"] = "no-cache";
@@ -61,7 +63,7 @@
             }
 
             body.no-background::before {
-                background: linear-gradient(135deg, #BBDEFB 0%, #2196F3 100%);
+                background: linear-gradient(90deg, #0079bf, #5067c5);
             }
 
         .login-container {
@@ -91,7 +93,7 @@
         }
 
         .login-header {
-            background: #2196F3 100%;
+            background: linear-gradient(90deg, #0079bf, #5067c5);
             color: #fff;
             padding: 40px 30px;
             text-align: center;
@@ -198,13 +200,13 @@
         }
 
             .form-control:focus {
-                border-color: #2196F3 ;
+                border-color: #5067c5;
                 box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
                 outline: none;
             }
 
             .form-control:hover {
-                border-color: #2196F3;
+                border-color: #5067c5;
             }
 
         .password-input-wrapper {
@@ -245,8 +247,8 @@
         }
 
             .form-check-input:checked {
-                background-color: #2196F3;
-                border-color: #2196F3 ;
+                background-color: #0079bf;
+                border-color: #0079bf;
             }
 
         .form-check-label {
@@ -257,7 +259,7 @@
         }
 
         .btn-login {
-            background:  #2196F3 100%;
+            background: linear-gradient(90deg, #0079bf, #5067c5);
             border: none;
             border-radius: 10px;
             padding: 14px;
@@ -404,8 +406,7 @@
                     <i class="fas fa-address-book"></i>
                 </div>
 
-                <h2>Đăng nhập</h2>
-                <p>PhoneBook</p>
+                <h2>SAGS - PhoneBook</h2>
             </div>
         </div>
 
@@ -417,18 +418,18 @@
 
                 <div class="input-group-custom">
                     <label asp-for="Username" class="form-label">
-                        <i class="fas fa-user"></i> Tên đăng nhập
+                        <i class="fas fa-user"></i> @Localizer["UserNameTitle"]
                     </label>
-                    <input asp-for="Username" class="form-control" placeholder="Nhập tên đăng nhập" autocomplete="username" autofocus />
+                    <input asp-for="Username" class="form-control" placeholder="@Localizer["UserNameInput"]" autocomplete="username" autofocus />
                     <span asp-validation-for="Username" class="text-danger"></span>
                 </div>
 
                 <div class="input-group-custom">
                     <label asp-for="Password" class="form-label">
-                        <i class="fas fa-lock"></i> Mật khẩu
+                        <i class="fas fa-lock"></i> @Localizer["PasswordTitle"]
                     </label>
                     <div class="password-input-wrapper">
-                        <input asp-for="Password" class="form-control" type="password" id="passwordInput" placeholder="Nhập mật khẩu" autocomplete="current-password" />
+                        <input asp-for="Password" class="form-control" type="password" id="passwordInput" placeholder="@Localizer["PasswordInput"]" autocomplete="current-password" />
                         <i class="fas fa-eye password-toggle" id="togglePassword"></i>
                     </div>
                     <span asp-validation-for="Password" class="text-danger"></span>
@@ -437,18 +438,18 @@
                 <div class="form-check">
                     <input asp-for="RememberMe" class="form-check-input" />
                     <label asp-for="RememberMe" class="form-check-label">
-                        Ghi nhớ đăng nhập
+                        @Localizer["RememberMeCheckboxTitle"]
                     </label>
                 </div>
 
                 <button type="submit" class="btn btn-login" id="btnLogin">
-                    <i class="fas fa-sign-in-alt"></i>   Đăng nhập
+                    <i class="fas fa-sign-in-alt" style="padding-right:5px"></i>   @Localizer["LoginTitle"]
                 </button>
             </form>
         </div>
 
         <div class="login-footer">
-            <p class="mb-0">© 2025 - PhoneBook</p>
+            <p class="mb-0">© 2025 SAGS - PhoneBook</p>
         </div>
     </div>
 
