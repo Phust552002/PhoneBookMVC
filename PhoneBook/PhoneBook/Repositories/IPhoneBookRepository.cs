@@ -13,8 +13,8 @@ public interface IPhoneBookRepository
     // Authentication
     Task<Employee> GetEmployeeByUsernameAsync(string username);
     //Update
-    Task<bool> UpdateEmployeeAsync(Employee employee);
+    //Task<bool> UpdateEmployeeAsync(Employee employee);
     //Add roles
-    Task<List<int>> GetUserRolesAsync(int userId);
+    //Task<List<int>> GetUserRolesAsync(int userId);
 
 }

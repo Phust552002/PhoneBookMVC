@@ -49,7 +49,7 @@ builder.Services.AddSession(options =>
 });
 builder.Services.AddScoped<IPhoneBookRepository, PhoneBookRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-
+builder.Services.AddScoped<INoteRepository, NoteRepository>();
 
 var app = builder.Build();
 var supportedCultures = new[] { "en-US", "vi-VN" };
@@ -93,7 +93,7 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
+app.MapControllers();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -30,10 +30,8 @@ namespace PhoneBook.Controllers
         {
             var fullName = User.FindFirst("FullName")?.Value ?? User.Identity.Name;
             var positionName = User.FindFirst("PositionName")?.Value ?? "Nhân viên";
-            var isAdmin = User.FindFirst("IsAdmin")?.Value == "True";
             ViewBag.UserName = fullName;
             ViewBag.UserPosition = positionName;
-            ViewBag.isAdmin = isAdmin;
             var departments = await _repo.GetDepartmentsAsync();
             return View(departments);
         }
@@ -99,36 +97,7 @@ namespace PhoneBook.Controllers
                 return Json(employees);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UpdateEmployee([DataSourceRequest] DataSourceRequest request, Employee employee)
-        {
-            var isAdmin = User.FindFirst("IsAdmin")?.Value == "True";
-            if(!isAdmin)
-            {
-                ModelState.AddModelError("", "You do not have permission to update employee information.");
-                return Json(new[] { employee }.ToDataSourceResult(request, ModelState));
-            }  
-            if (employee == null || employee.UserId <= 0)
-            {
-                return Json(new[] { employee }.ToDataSourceResult(request));
-            }
-            if (!ModelState.IsValid)
-            {
-                return Json(new[] { employee }.ToDataSourceResult(request, ModelState));
-            }
-
-                var result = await _repo.UpdateEmployeeAsync(employee);
-
-            if (result)
-            {
-                return Json(new[] { employee }.ToDataSourceResult(request, ModelState));
-            }
-            else
-            {
-                ModelState.AddModelError("", "Failed to update employee");
-                return Json(new[] { employee }.ToDataSourceResult(request, ModelState));
-            }
-        }
+       
 
         public IActionResult SetLanguage(string culture, string returnUrl = "/")
         {

@@ -101,37 +101,37 @@ public class PhoneBookRepository : IPhoneBookRepository
     }
 
     //SP: Upd_UpdateEmployee
-    public async Task<bool> UpdateEmployeeAsync(Employee employee)
-    {
-        using var connection = CreateConnection();
+    //public async Task<bool> UpdateEmployeeAsync(Employee employee)
+    //{
+    //    using var connection = CreateConnection();
 
-        var result = await connection.QueryFirstOrDefaultAsync<int>(
-            "Upd_UpdateEmployee",
-            new
-            {
-                employee.UserId,
-                employee.FullName,
-                employee.WorkingPhone,
-                employee.HandPhone,
-                employee.BusinessEmail
-            },
-            commandType: CommandType.StoredProcedure
-        );
+    //    var result = await connection.QueryFirstOrDefaultAsync<int>(
+    //        "Upd_UpdateEmployee",
+    //        new
+    //        {
+    //            employee.UserId,
+    //            employee.FullName,
+    //            employee.WorkingPhone,
+    //            employee.HandPhone,
+    //            employee.BusinessEmail
+    //        },
+    //        commandType: CommandType.StoredProcedure
+    //    );
 
-        return result > 0;
-    }
+    //    return result > 0;
+    //}
 
     //SP: Sel_GetUserRoles
-    public async Task<List<int>> GetUserRolesAsync(int userId)
-    {
-        using var connection = CreateConnection();
+    //public async Task<List<int>> GetUserRolesAsync(int userId)
+    //{
+    //    using var connection = CreateConnection();
 
-        var roles = (await connection.QueryAsync<int>(
-            "Sel_GetUserRoles",
-            new { UserId = userId },
-            commandType: CommandType.StoredProcedure
-        )).ToList();
+    //    var roles = (await connection.QueryAsync<int>(
+    //        "Sel_GetUserRoles",
+    //        new { UserId = userId },
+    //        commandType: CommandType.StoredProcedure
+    //    )).ToList();
 
-        return roles;
-    }
+    //    return roles;
+    //}
 }

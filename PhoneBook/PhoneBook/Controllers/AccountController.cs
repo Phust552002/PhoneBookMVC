@@ -46,9 +46,6 @@ namespace PhoneBook.Controllers
                 ModelState.AddModelError(string.Empty, "Tên đăng nhập hoặc mật khẩu không đúng.");
                 return View(model);
             }
-            var employeeRole = await _authService.GetUserRolesAsync(employee.UserId);
-            var adminRoleIds = new[] {1,2,4,8,10,20}; // Các RoleId có quyền truy cập hệ thống
-            bool isAdmin = employeeRole.Any(roleId => adminRoleIds.Contains(roleId));
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, employee.UserId.ToString()),
@@ -57,12 +54,7 @@ namespace PhoneBook.Controllers
                 new Claim("EmployeeCode", employee.EmployeeCode ?? ""),
                 new Claim("PositionName", employee.PositionName ?? "Nhân viên"),
                 new Claim("DepartmentId", employee.DepartmentId?.ToString() ?? "0"),
-                new Claim("IsAdmin", isAdmin.ToString())
             };
-            foreach (var roleId in employeeRole)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, roleId.ToString()));
-            }
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var authProperties = new AuthenticationProperties
             {

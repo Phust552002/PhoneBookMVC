@@ -2,195 +2,75 @@
 @using Kendo.Mvc
 @{
     ViewData["Title"] = "Danh bạ nội bộ";
-    var isAdmin = ViewBag.IsAdmin ?? false;
 }
 
-@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
-
-<meta charset="utf-8" />
-
 <style>
-    /* ====== OVERRIDE KENDO CSS VARIABLES ====== */
     :root {
-        --kendo-color-primary: #0079bf;
-        --kendo-color-primary-hover: #5067c5;
-        --kendo-color-primary-active: #5067c5;
-        --kendo-color-on-primary: #ffffff;
+        --brand: #0079bf;
+        --brand-dk: #5067c5;
+        --nav-h: 64px;
+        --notes-w: 290px;
     }
 
-    /* Override trực tiếp cho nút Save */
-    .k-button-solid-primary,
-    .k-grid-update.k-button-solid-primary {
-        border-color: #0079bf !important;
+    /* ── KENDO OVERRIDES ── */
+    .k-button-solid-primary {
+        border-color: var(--brand) !important;
+        background-color: var(--brand) !important;
         color: #fff !important;
-        background-color: #0079bf !important;
     }
 
-    .k-button-solid-primary:hover,
-    .k-grid-update.k-button-solid-primary:hover {
-        border-color: #5067c5 !important;
-        background-color: #5067c5 !important;
-    }
+        .k-button-solid-primary:hover {
+            border-color: var(--brand-dk) !important;
+            background-color: var(--brand-dk) !important;
+        }
 
-    .k-button-solid-primary:active,
-    .k-grid-update.k-button-solid-primary:active {
-        border-color: #0079bf !important;
-        background-color: #0079bf !important;
-    }
-
-    /* Override cho nút Edit  */
-    .k-grid .k-grid-edit.k-button {
-        color: #0079bf !important;
-        background-color: transparent !important;
-        border-color: transparent !important;
-    }
-
-    .k-grid .k-grid-edit.k-button:hover {
-        color: #0079bf !important;
-        background-color: #e3f2fd !important;
-    }
-
-    .k-grid .k-grid-edit .k-button-icon {
-        color: #0079bf !important;
-    }
-
-    .k-grid .k-grid-edit:hover .k-button-icon {
-        color: #1976D2 !important;
-    }
-    /* ====== BASE ====== */
     body {
-        font-size: 13px;
-    }
-
-    .phonebook-container {
-        padding: 10px 0;
-        height: calc(100vh - 80px);
         overflow: hidden;
     }
 
-    .section-card {
-        background: #fff;
-        border-radius: 6px;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-        padding: 12px;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
+    /* ── SPLITTER ── */
+    #pbSplitter {
+        height: calc(100vh - var(--nav-h));
+        border: none !important;
+        position: relative;
     }
 
-    .section-header {
+    .k-splitter {
+        background: #f0f2f5 !important;
+    }
+
+    .k-splitbar {
+        background: #dee2e6 !important;
+    }
+
+    /* ── LEFT PANE — TREE ── */
+    .pane-tree {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        padding-bottom: 8px;
+        flex-direction: column;
+        height: 100%;
+        padding: 10px;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    .pane-tree-title {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        color: var(--brand);
+        padding-bottom: 7px;
+        margin-bottom: 8px;
         border-bottom: 2px solid #e9ecef;
         flex-shrink: 0;
     }
 
-        .section-header h3 {
-            margin: 0;
-            color: #2c3e50;
-            font-weight: 600;
-            font-size: 15px;
-        }
-
-    /* ====== LOADING OVERLAY ====== */
-    .loading-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(255, 255, 255, 0.9);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-        border-radius: 6px;
-    }
-
-    .loading-overlay.show {
-        display: flex;
-    }
-
-    .loading-spinner {
-        text-align: center;
-    }
-
-    .spinner {
-        border: 4px solid #f3f3f3;
-        border-top: 4px solid #0079bf;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        animation: spin 1s linear infinite;
-        margin: 0 auto 15px;
-    }
-
-    @@keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    .loading-text {
-        color: #0079bf;
-        font-weight: 600;
-        font-size: 14px;
-    }
-
-    /* ====== SEARCH BOX ====== */
-    .search-box {
-        background: #f8f9fa;
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-        padding: 8px;
-        margin-bottom: 10px;
-        flex-shrink: 0;
-    }
-
-        .search-box label {
-            font-size: 11px;
-            font-weight: 600;
-            margin-bottom: 3px;
-        }
-
-        .search-box input {
-            border-radius: 3px;
-            font-size: 12px;
-            padding: 4px 8px;
-        }
-
-    /* ====== EMPLOYEE COUNT ====== */
-    .employee-count {
-        background: #0079bf 100%;
-        color: #fff;
-        padding: 6px 12px;
-        border-radius: 4px;
-        text-align: center;
-        font-weight: 600;
-        font-size: 12px;
-        margin-top: 8px;
-        box-shadow: 0 1px 4px rgba(102, 126, 234, 0.3);
-        flex-shrink: 0;
-    }
-
-    /* ====== TREE & GRID ====== */
-    .tree-wrapper {
+    .tree-scroll {
         flex: 1;
         overflow-y: auto;
-        border: 1px solid #dee2e6;
+        border: 1px solid #e9ecef;
         border-radius: 4px;
-        padding: 6px;
-        background: #fff;
-    }
-
-    .grid-wrapper {
-        flex: 1;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        position: relative;
+        padding: 4px;
     }
 
     #deptTree {
@@ -200,87 +80,97 @@
         #deptTree .k-in {
             padding: 4px 6px;
         }
+
         #deptTree .k-selected > .k-in {
-            background-color:#0079bf !important;
-            color: white !important;
+            background-color: var(--brand) !important;
+            color: #fff !important;
         }
 
-    .k-grid {
+    /* ── CENTER PANE — GRID ── */
+    .pane-center {
         display: flex;
         flex-direction: column;
         height: 100%;
+        padding: 10px 12px;
+        background: #f8f9fa;
+        overflow: hidden;
+        position: relative;
     }
 
-    .k-grid-container {
+    .section-header {
         display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-    /* FORCE SCROLLBAR LUÔN HIỂN THỊ */
-    .k-grid .k-grid-content.k-auto-scrollable {
-        overflow-y: scroll !important;
-        overflow-x: auto !important;
-    }
-
-    /* Đảm bảo scrollbar luôn chiếm không gian */
-    .k-grid .k-grid-content.k-auto-scrollable::-webkit-scrollbar {
-        -webkit-appearance: none;
-        width: 12px !important;
-        display: block !important;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e9ecef;
+        flex-shrink: 0;
+        gap: 8px;
     }
 
-    .k-grid .k-grid-content.k-auto-scrollable::-webkit-scrollbar-thumb {
-        border-radius: 6px;
-        background-color: rgba(0, 0, 0, .3);
-        box-shadow: 0 0 1px rgba(255, 255, 255, .5);
-        min-height: 30px;
+        .section-header h3 {
+            margin: 0;
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+            min-width: 0;
+        }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
     }
 
-    .k-grid .k-grid-content.k-auto-scrollable::-webkit-scrollbar-track {
-        background-color: #f1f1f1;
-        display: block !important;
-    }
-
-    /* Firefox - Force scrollbar */
-    .k-grid .k-grid-content.k-auto-scrollable {
-        scrollbar-width: auto !important;
-        scrollbar-color: rgba(0, 0, 0, .3) #f1f1f1;
-    }
-
-    /* IE/Edge */
-    .k-grid .k-grid-content.k-auto-scrollable {
-        -ms-overflow-style: scrollbar !important;
-    }
-
-    .k-treeview .k-selected {
-    background-color: linear-gradient(90deg, #0079bf, #5067c5);
-    color: white !important;
-}
-    .k-grid-header th {
+    .btn-note-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 12px;
+        border-radius: 20px;
+        border: 1.5px solid var(--brand);
+        background: #fff;
+        color: var(--brand);
         font-size: 12px;
-        padding: 6px 8px;
-    }
-
-    .k-grid-content td {
-        padding: 4px 8px;
-        font-size: 12px;
-    }
-
-    .k-pager-wrap {
-        font-size: 11px;
-        padding: 4px 8px;
-    }
-
-
-    .row-number {
         font-weight: 600;
-        color: #6c757d;
+        cursor: pointer;
+        transition: all .2s;
+        white-space: nowrap;
     }
 
-    /* ====== TABSTRIP ====== */
+        .btn-note-toggle:hover,
+        .btn-note-toggle.active {
+            background: linear-gradient(90deg,var(--brand),var(--brand-dk));
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 2px 6px rgba(0,121,191,.35);
+        }
+
+    .note-badge {
+        background: #e74c3c;
+        color: #fff;
+        border-radius: 10px;
+        padding: 1px 6px;
+        font-size: 10px;
+        font-weight: 700;
+        min-width: 18px;
+        text-align: center;
+        display: none;
+    }
+
+    .has-notes .note-badge {
+        display: inline-block;
+    }
+
+    /* ── TABS ── */
     .k-tabstrip {
         border: none;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         flex-shrink: 0;
     }
 
@@ -289,69 +179,547 @@
             border: none;
         }
 
-        .k-tabstrip > .k-tabstrip-items-wrapper .k-tabstrip-items {
-            padding: 0;
-            border-bottom: 2px solid #e9ecef;
-            background: transparent;
-        }
+            .k-tabstrip > .k-tabstrip-items-wrapper .k-tabstrip-items {
+                padding: 0;
+                border-bottom: 2px solid #e9ecef;
+                background: transparent;
+            }
 
         .k-tabstrip .k-item {
             border: none;
             background: transparent;
-            margin-right: 8px;
+            margin-right: 6px;
             border-radius: 6px 6px 0 0;
-            transition: all 0.2s ease;
+            transition: all .2s;
         }
 
-        .k-tabstrip .k-item .k-link {
-            padding: 10px 20px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #6c757d;
-            border-radius: 6px 6px 0 0;
-            border: 1px solid transparent;
-            transition: all 0.2s ease;
-        }
+            .k-tabstrip .k-item .k-link {
+                padding: 8px 16px;
+                font-size: 12px;
+                font-weight: 600;
+                color: #6c757d;
+                border-radius: 6px 6px 0 0;
+                border: 1px solid transparent;
+            }
 
-        .k-tabstrip .k-item.k-active {
-            background: #0079bf;
-            border: 1px solid#0079bf;
-        }
+            .k-tabstrip .k-item.k-active {
+                background: var(--brand);
+                border: 1px solid var(--brand);
+            }
 
-        .k-tabstrip .k-item.k-active .k-link {
-            background: #0079bf;
-            color: white;
-            border-bottom: 2px solid#0079bf;
-        }
+                .k-tabstrip .k-item.k-active .k-link {
+                    background: var(--brand);
+                    color: #fff;
+                    border-bottom: 2px solid var(--brand);
+                }
 
-        .k-tabstrip .k-item:not(.k-active):hover {
-            background: #e3f2fd;
-        }
+            .k-tabstrip .k-item:not(.k-active):hover {
+                background: #e3f2fd;
+            }
 
-        .k-tabstrip .k-item:not(.k-active):hover .k-link {
-            background: #e3f2fd;
-            color: #0079bf;
-        }
+                .k-tabstrip .k-item:not(.k-active):hover .k-link {
+                    color: var(--brand);
+                }
 
-        .k-tabstrip > .k-tabstrip-content,
-        .k-tabstrip-content {
+        .k-tabstrip > .k-tabstrip-content, .k-tabstrip-content {
             display: none !important;
         }
 
-    /* ====== EXPORT PDF STYLE ====== */
-    .k-pdf-export {
-        font-family: 'Roboto', 'DejaVu Sans', Arial, sans-serif !important;
+    /* ── SEARCH ── */
+    .search-box {
+        background: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 6px 8px;
+        margin-bottom: 8px;
+        flex-shrink: 0;
     }
 
-        .k-pdf-export .k-grid-toolbar,
-        .k-pdf-export .k-filter-row,
-        .k-pdf-export .k-pager,
-        .k-pdf-export .no-pdf {
-            display: none !important;
+        .search-box input {
+            width: 100%;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 12px;
+            padding: 5px 8px;
+            outline: none;
+            transition: border-color .15s;
         }
 
+            .search-box input:focus {
+                border-color: var(--brand);
+                box-shadow: 0 0 0 2px rgba(0,121,191,.12);
+            }
+
+    /* ── GRID ── */
+    .grid-wrapper {
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        min-height: 0;
+    }
+
+    .loading-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(255,255,255,.9);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 99;
+        border-radius: 4px;
+    }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+    .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid var(--brand);
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 8px;
+    }
+
+    .loading-text {
+        color: var(--brand);
+        font-weight: 600;
+        font-size: 12px;
+    }
+
+    @@keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .k-grid {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        border: none !important;
+    }
+
+    .k-grid-container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .k-grid .k-grid-content {
+        overflow-y: auto !important;
+    }
+
+        .k-grid .k-grid-content.k-auto-scrollable {
+            overflow-y: scroll !important;
+            overflow-x: auto !important;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0,0,0,.2) #f1f1f1;
+        }
+
+            .k-grid .k-grid-content.k-auto-scrollable::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            .k-grid .k-grid-content.k-auto-scrollable::-webkit-scrollbar-thumb {
+                border-radius: 4px;
+                background: rgba(0,0,0,.2);
+            }
+
+    .k-grid-header th {
+        font-size: 12px;
+        padding: 6px 8px;
+    }
+
+    .k-grid-content td {
+        padding: 5px 8px;
+        font-size: 12px;
+    }
+
+    .k-pager-wrap {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+
+    .row-number {
+        font-weight: 600;
+        color: #6c757d;
+    }
+
+    .k-grid .k-command-cell .k-grid-edit {
+        color: #2196F3;
+    }
+
+    .employee-count {
+        background: var(--brand);
+        color: #fff;
+        padding: 5px 12px;
+        border-radius: 4px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 12px;
+        margin-top: 6px;
+        box-shadow: 0 1px 4px rgba(0,121,191,.25);
+        flex-shrink: 0;
+    }
+
+    /* ── NOTES SLIDE-IN PANEL ── */
+    #notesBackdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 490;
+        background: transparent;
+    }
+
+        #notesBackdrop.show {
+            display: block;
+        }
+
+    #notesPanel {
+        position: fixed;
+        top: var(--nav-h);
+        right: 0;
+        bottom: 0;
+        width: var(--notes-w);
+        background: #fff;
+        border-left: 3px solid var(--brand);
+        box-shadow: -4px 0 20px rgba(0,0,0,.12);
+        z-index: 500;
+        display: flex;
+        flex-direction: column;
+        transform: translateX(100%);
+        transition: transform .25s cubic-bezier(.4,0,.2,1);
+        overflow: hidden;
+    }
+
+        #notesPanel.open {
+            transform: translateX(0);
+        }
+
+    .notes-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 14px;
+        border-bottom: 2px solid #e9ecef;
+        flex-shrink: 0;
+    }
+
+        .notes-panel-header h5 {
+            margin: 0;
+            color: var(--brand);
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+    .btn-notes-close {
+        background: none;
+        border: none;
+        color: #adb5bd;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 0 2px;
+        line-height: 1;
+    }
+
+        .btn-notes-close:hover {
+            color: #e74c3c;
+        }
+
+    .note-search {
+        padding: 8px 14px 0;
+        flex-shrink: 0;
+    }
+
+        .note-search input {
+            width: 100%;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 12px;
+            padding: 5px 8px;
+            outline: none;
+        }
+
+            .note-search input:focus {
+                border-color: var(--brand);
+                box-shadow: 0 0 0 2px rgba(0,121,191,.12);
+            }
+
+    .btn-add-note {
+        display: block;
+        width: calc(100% - 28px);
+        margin: 8px 14px;
+        padding: 7px;
+        border-radius: 4px;
+        border: 1.5px dashed var(--brand);
+        background: #f0f8ff;
+        color: var(--brand);
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all .2s;
+    }
+
+        .btn-add-note:hover {
+            background: var(--brand);
+            color: #fff;
+            border-style: solid;
+        }
+
+    .notes-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0 14px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+        .notes-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .notes-list::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,.15);
+            border-radius: 2px;
+        }
+
+    .note-item {
+        border: 1px solid #e9ecef;
+        border-radius: 6px;
+        padding: 8px 10px;
+        background: #fafafa;
+        position: relative;
+        transition: box-shadow .15s;
+    }
+
+        .note-item:hover {
+            box-shadow: 0 2px 8px rgba(0,121,191,.12);
+            border-color: #b3d7f0;
+        }
+
+        .note-item.note-hidden {
+            display: none;
+        }
+
+    .note-item-title {
+        font-weight: 700;
+        font-size: 12px;
+        color: #2c3e50;
+        margin-bottom: 3px;
+        padding-right: 44px;
+        word-break: break-word;
+    }
+
+    .note-item-desc {
+        font-size: 11px;
+        color: #6c757d;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .note-item-date {
+        font-size: 10px;
+        color: #adb5bd;
+        margin-top: 4px;
+    }
+
+    .note-item-actions {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        display: flex;
+        gap: 3px;
+    }
+
+    .btn-note-action {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-size: 12px;
+        line-height: 1;
+    }
+
+    .btn-note-edit {
+        color: var(--brand);
+    }
+
+        .btn-note-edit:hover {
+            background: #e3f2fd;
+        }
+
+    .btn-note-delete {
+        color: #e74c3c;
+    }
+
+        .btn-note-delete:hover {
+            background: #fde8e8;
+        }
+
+    .notes-empty {
+        text-align: center;
+        color: #adb5bd;
+        font-size: 12px;
+        padding: 24px 8px;
+    }
+
+        .notes-empty i {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+    /* ── NOTE MODAL ── */
+    .note-modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.45);
+        z-index: 10000;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .note-modal-overlay.show {
+            display: flex;
+        }
+
+    .note-modal {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 8px 32px rgba(0,0,0,.2);
+        width: 420px;
+        max-width: 95vw;
+        overflow: hidden;
+        animation: modalIn .2s ease;
+    }
+
+    @@keyframes modalIn {
+        from {
+            transform: scale(.92);
+            opacity: 0;
+        }
+
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .note-modal-header {
+        background: linear-gradient(90deg,var(--brand),var(--brand-dk));
+        color: #fff;
+        padding: 12px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+        .note-modal-header h5 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+    .btn-modal-close {
+        background: none;
+        border: none;
+        color: rgba(255,255,255,.8);
+        font-size: 20px;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+    }
+
+        .btn-modal-close:hover {
+            color: #fff;
+        }
+
+    .note-modal-body {
+        padding: 18px;
+    }
+
+        .note-modal-body label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .note-modal-body input,
+        .note-modal-body textarea {
+            width: 100%;
+            font-size: 13px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 7px 10px;
+            resize: vertical;
+            font-family: inherit;
+            outline: none;
+        }
+
+            .note-modal-body input:focus,
+            .note-modal-body textarea:focus {
+                border-color: var(--brand);
+                box-shadow: 0 0 0 2px rgba(0,121,191,.12);
+            }
+
+    .note-modal-footer {
+        padding: 10px 18px;
+        background: #f8f9fa;
+        border-top: 1px solid #e9ecef;
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    .btn-note-save {
+        padding: 7px 18px;
+        border-radius: 4px;
+        font-size: 13px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        background: linear-gradient(90deg,var(--brand),var(--brand-dk));
+        color: #fff;
+    }
+
+        .btn-note-save:hover {
+            opacity: .88;
+        }
+
+    .btn-note-cancel {
+        padding: 7px 14px;
+        border-radius: 4px;
+        font-size: 13px;
+        border: 1px solid #dee2e6;
+        background: #fff;
+        color: #6c757d;
+        cursor: pointer;
+    }
+
+        .btn-note-cancel:hover {
+            background: #e9ecef;
+        }
+
+    /* ── PDF ── */
+    .k-pdf-export .k-grid-toolbar, .k-pdf-export .k-pager, .k-pdf-export .no-pdf {
+        display: none !important;
+    }
+
     .page-template {
-        font-family: "Arial", sans-serif;
+        font-family: Arial,sans-serif;
         position: absolute;
         width: 100%;
         height: 100%;
@@ -384,554 +752,745 @@
             text-align: center;
             margin-top: 30%;
             color: #aaa;
-            opacity: 0.1;
-            transform: rotate(-35deg) scale(1.7, 1.5);
+            opacity: .1;
+            transform: rotate(-35deg) scale(1.7,1.5);
         }
 
-    .k-grid .k-grid-content {
-        overflow-y: auto !important;
-    }
-
-    /* ====== EDIT POPUP STYLE ====== */
-    .k-window.k-grid-edit-form {
-        border-radius: 8px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    }
-
-    .k-window.k-grid-edit-form .k-window-titlebar {
-        background:linear-gradient(90deg, #0079bf, #5067c5);
-        color: #fff;
-        border-radius: 8px 8px 0 0;
-        padding: 15px 20px;
-    }
-
-    .k-window.k-grid-edit-form .k-window-title {
-        font-weight: 600;
-        font-size: 16px;
-    }
-
-    .k-window.k-grid-edit-form .k-edit-form-container {
-        padding: 20px;
-    }
-
-    .k-window.k-grid-edit-form .k-edit-label {
-        width: 35%;
-        text-align: right;
-        padding-right: 15px;
-        font-weight: 600;
-        color: #495057 ;
-        font-size: 13px;
-    }
-
-    .k-window.k-grid-edit-form .k-edit-field {
-        width: 65%;
-    }
-    k-window-title{
-        color :#fff;
-    }
-    .k-window.k-grid-edit-form .k-textbox {
-        width: 100%;
-        padding: 8px 12px;
-        border: 1px solid #ced4da;
-        border-radius: 4px;
-        font-size: 13px;
-    }
-
-    .k-window.k-grid-edit-form .k-textbox:focus {
-        border-color: #2196F3;
-        box-shadow: 0 0 0 0.2rem rgba(33, 150, 243, 0.25);
-    }
-
-    .k-window.k-grid-edit-form .k-edit-buttons {
-        padding: 15px 20px;
-        background: #f8f9fa;
-        border-top: 1px solid #dee2e6;
-        border-radius: 0 0 8px 8px;
-    }
-
-    .k-window.k-grid-edit-form .k-grid-update {
-        background: linear-gradient(90deg, #0079bf, #5067c5);
-        border-color: #0079bf;
-        color: white;
-        padding: 8px 20px;
-        font-weight: 600;
-    }
-
-    .k-window.k-grid-edit-form .k-grid-update:hover {
-        background:#0079bf;
-        border-color: #0079bf;
-    }
-
-    .k-window.k-grid-edit-form .k-grid-cancel {
-        background: #6c757d;
-        border-color: #6c757d;
-        color: white;
-        padding: 8px 20px;
-        font-weight: 600;
-    }
-
-    .k-window.k-grid-edit-form .k-grid-cancel:hover {
-        background: #5a6268;
-        border-color: #5a6268;
-    }
-
-    .k-window .k-window-titlebar {
-        display: flex;
-        justify-content: center;      
-        align-items: center;
-        text-align: center;
-        background:linear-gradient(90deg, #0079bf, #5067c5);
-        color: #fff;
-        font-weight: 600;
-        font-size: 16px;
-        border-radius: 0px 0px 0 0;
-        padding: 10px 20px;
-        position: relative;
-    }
-
-    .k-window .k-window-actions {
-        display: flex;
-        justify-content: center;      
-        align-items: center;
-        text-align: center;
-    }
-    .k-window-title {
-        display: flex;
-        justify-content: center;    
-        align-items: center;
-        text-align: center;
-        font-weight: 700;
-        font-size: 16px;
-        color: #fff;
-    }
-
-    .k-grid .k-grid-content-locked {
-        border-right: 2px solid #dee2e6;
-    }
-
-    .k-grid td.k-command-cell {
-        position: sticky;
+    /* ── MOBILE ── */
+    .mobile-tabs {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        left: 0;
         right: 0;
         background: #fff;
-        z-index: 2;
+        border-top: 2px solid #e9ecef;
+        z-index: 200;
+        height: 56px;
     }
 
-    .k-grid tr:hover td.k-command-cell {
+    .tab-bar {
+        display: flex;
+        height: 100%;
+    }
+
+    .mobile-tab-btn {
+        flex: 1;
+        border: none;
+        background: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        cursor: pointer;
+        color: #6c757d;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 0;
+    }
+
+        .mobile-tab-btn i {
+            font-size: 18px;
+        }
+
+        .mobile-tab-btn.active {
+            color: var(--brand);
+        }
+
+    .mobile-panel {
+        display: none;
+        position: fixed;
+        top: var(--nav-h);
+        left: 0;
+        right: 0;
+        bottom: 56px;
+        background: #fff;
+        z-index: 150;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+        .mobile-panel.show {
+            display: flex;
+        }
+
+    .mobile-panel-header {
+        padding: 12px 16px;
+        border-bottom: 2px solid #e9ecef;
+        font-weight: 700;
+        color: var(--brand);
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    .mobile-panel-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .mobile-center {
+        display: none;
+        flex-direction: column;
+        position: fixed;
+        top: var(--nav-h);
+        left: 0;
+        right: 0;
+        bottom: 56px;
         background: #f8f9fa;
+        z-index: 100;
+        overflow: hidden;
+        padding: 8px;
     }
 
-    @@media (max-width: 768px) {
-        .phonebook-container {
-            height: auto;
+        .mobile-center.show {
+            display: flex;
+        }
+
+    @@media (max-width:768px) {
+        body {
             overflow: auto;
         }
 
-        .section-card {
-            margin-bottom: 15px;
-            height: auto;
+        #pbSplitter {
+            display: none !important;
+        }
+
+        #notesPanel {
+            display: none !important;
+        }
+
+        #notesBackdrop {
+            display: none !important;
+        }
+
+        .mobile-tabs {
+            display: flex;
         }
     }
-    .k-grid .k-command-cell .k-grid-edit {
-        color: #2196F3;
-    }
 
-    .k-grid .k-command-cell .k-grid-edit:hover {
-        color: #1976D2;
+    @@media (min-width:769px) {
+        .mobile-tabs {
+            display: none !important;
+        }
+
+        .mobile-panel {
+            display: none !important;
+        }
+
+        .mobile-center {
+            display: none !important;
+        }
     }
 </style>
 
-<!-- ===================== MAIN VIEW ===================== -->
-<div class="phonebook-container">
-    <div class="row h-100">
-
-        <!-- DEPARTMENTS TREEVIEW -->
-        <div class="col-lg-3 col-md-4 h-100">
-            <div class="section-card">
-                <div class="tree-wrapper">
-                    @(Html.Kendo().TreeView()
+<!-- ══ DESKTOP: 2-pane Splitter ══ -->
+@(Html.Kendo().Splitter()
+    .Name("pbSplitter")
+    .Orientation(SplitterOrientation.Horizontal)
+    .Panes(p =>
+    {
+        // LEFT — TreeView
+        p.Add().Size("240px").Collapsible(true).Resizable(true)
+            .Content(@<text>
+                          <div class="pane-tree">
+                              <div class="pane-tree-title"><i class="fas fa-sitemap me-1"></i>Phòng ban</div>
+                              <div class="tree-scroll">
+            @(Html.Kendo().TreeView()
                         .Name("deptTree")
                         .DataTextField("text")
                         .DataSource(ds => ds
-                            .Read(r => r.Url(Url.Action("GetDepartments", "Home")))
-                            .Model(m =>
-                            {
-                                m.Id("id");
-                                m.Children("items");
-                            })
+                        .Read(r => r.Url(Url.Action("GetDepartments", "Home")))
+                        .Model(m => { m.Id("id"); m.Children("items"); })
                         )
-                        .Events(e => e
-                            .Select("onDeptSelect")
-                            .DataBound("onTreeDataBound")
+                        .Events(e => e.Select("onDeptSelect").DataBound("onTreeDataBound"))
                         )
-                    )
-                </div>
-            </div>
         </div>
+    </div>
+</text>);
 
-        <!-- EMPLOYEES LIST -->
-        <div class="col-lg-9 col-md-7 h-100">
-            <div class="section-card">
-                <div class="section-header">
-                    <h3><i class="fas fa-users me-2"></i><span id="departmentTitle">@Localizer["EmployeeListTitle"]</span></h3>
-                </div>
+        // CENTER — Grid
+        p.Add().Collapsible(false).Resizable(true)
+            .Content(@<text>
+                          <div class="pane-center">
+                              <div class="section-header">
+                                  <h3>
+                                      <i class="fas fa-users me-1" style="color:var(--brand)"></i>
+                                      <span id="departmentTitle">Tất cả nhân viên</span>
+                                  </h3>
+                                  <div class="header-actions">
+                                      <button class="btn-note-toggle" id="btnToggleNotes" onclick="toggleNotes()">
+                                          <i class="fas fa-sticky-note"></i> Ghi chú
+                                          <span class="note-badge" id="noteBadge">0</span>
+                                      </button>
+                                  </div>
+                              </div>
 
-                <!-- TABSTRIP -->
-                @(Html.Kendo().TabStrip()
-                    .Name("employeeTabStrip")
-                    .Items(items =>
-                    {
-                        items.Add()
-                            .Text(@Localizer["ActiveEmployees"].Value)
-                            .Selected(true)
-                            .HtmlAttributes(new { id = "tab-active" });
-                        
-                        items.Add()
-                            .Text(@Localizer["InactiveEmployees"].Value)
-                            .HtmlAttributes(new { id = "tab-inactive" });
-                    })
-                    .Events(e => e.Select("onTabSelect"))
+        @(Html.Kendo().TabStrip()
+                .Name("employeeTabStrip")
+                .Items(items =>
+                {
+                    items.Add().Text("Đang làm việc").Selected(true).HtmlAttributes(new { id = "tab-active" });
+                    items.Add().Text("Đã nghỉ việc").HtmlAttributes(new { id = "tab-inactive" });
+                })
+                .Events(e => e.Select("onTabSelect"))
                 )
 
-                <div class="search-box">
-                    <label class="form-label mb-1"><i class="fas fa-search me-1"></i>@Localizer["SearchLabel"]</label>
-                    <input type="text" id="employeeSearch" class="form-control form-control-sm"
-                           placeholder="@Localizer["SearchBoxPlaceholder"]" />
-                </div>
+        <div class="search-box">
+            <input type="text" id="employeeSearch" placeholder="Tìm theo tên, SĐT, email..." />
+        </div>
 
-                <div class="grid-wrapper">
-                    <div class="loading-overlay" id="gridLoadingOverlay">
-                        <div class="loading-spinner">
-                            <div class="spinner"></div>
-                            <div class="loading-text">Đang tải dữ liệu...</div>
-                        </div>
-                    </div>
-
-                    @(
-                        Html.Kendo().Grid<PhoneBook.Models.Employee>()
-                            .Name("employeeGrid")
-                            .ToolBar(tools => { 
-                                tools.Pdf(); 
-                                tools.Excel();
-                            })
-                            .Excel(excel => excel.FileName("PhoneBook_Export.xlsx").AllPages(true))
-                            .Pdf(pdf => pdf
-                                .AllPages()
-                                .AvoidLinks()
-                                .PaperSize("A4")
-                                .Scale(0.8)
-                                .Margin("2cm", "1cm", "1cm", "1cm")
-                                .Landscape()
-                                .TemplateId("page-template")
-                                .FileName("PhoneBook.pdf")
-                                .ProxyURL(Url.Action("Pdf_Export_Save", "Grid"))
-                                .ForceProxy(true)
-                            )
-                            .Columns(columns =>
-                            {
-                                columns.Template("<span class='row-number'></span>")
-                                    .Title(@Localizer["Column_STT"].Value)
-                                    .Width(60)
-                                    .HtmlAttributes(new { data_field = "stt" });
-
-                                columns.Bound(e => e.FullName)
-                                    .Title(@Localizer["Column_FullName"].Value)
-                                    .Width(240)
-                                    .HtmlAttributes(new { data_field = "fullname" });
-
-                                columns.Bound(e => e.WorkingPhone)
-                                    .Title(@Localizer["Column_WorkPhone"].Value)
-                                    .Width(200)
-                                    .HtmlAttributes(new { data_field = "workingphone" });
-
-                                columns.Bound(e => e.HandPhone)
-                                    .Title(@Localizer["Column_Mobile"].Value)
-                                    .Width(240)
-                                    .HtmlAttributes(new { data_field = "handphone" });
-
-                                columns.Bound(e => e.BusinessEmail)
-                                    .Title(@Localizer["Column_BusinessEmail"].Value)
-                                    .Width(240)
-                                    .HtmlAttributes(new { data_field = "businessemail" });
-
-                                if (isAdmin)
-                                {
-                                    columns.Command(command =>
-                                    {
-                                        command.Edit().Text(" ");
-                                    })
-                                    .Width(50)
-                                .HtmlAttributes(new { @class = "no-pdf" })
-                                .Resizable(false);
-                            }
-                        })
-                        .Scrollable()
-                        .Sortable()
-                        .ColumnMenu(menu => menu
-                            .Enabled(true)
-                            .Filterable(false))
-                        .Groupable(false)
-                        .Resizable(resize => resize.Columns(true))
-                        .Editable(editable => editable
-                            .Mode(GridEditMode.PopUp)
-                            .Window(w => w.Title(@Localizer["EditEmployeeTitle"].Value)) 
-                            .TemplateName("EmployeeEditTemplate")
-                        )
-                        .Pageable(page => page
-                            .ButtonCount(5)
-                           .Messages(m => m
-                                .ItemsPerPage(@Localizer["ItemsPerPageMsg"].Value)
-                                .Display(@Localizer["DisplayMsg"].Value)
-                                .Empty(@Localizer["EmptyMsg"].Value)
-                                .First(@Localizer["FirstMsg"].Value)
-                                .Last(@Localizer["LastMsg"].Value)
-                                .Next(@Localizer["NextMsg"].Value)
-                                .Previous(@Localizer["PreviousMsg"].Value)
-                                .Refresh(@Localizer["RefreshMsg"].Value)
-                            )
-                        )
-                        .DataSource(ds => ds
-                            .Ajax()
-                            .ServerOperation(false)
-                            .PageSize(30)
-                            .Model(m => m.Id(e => e.UserId))
-                            .Read(read => read.Action("GetAllEmployees", "Home").Type(HttpVerbs.Get))
-                            .Update(update => update.Action("UpdateEmployee", "Home").Type(HttpVerbs.Post))
-                        )
-                        .Events(e => e
-                            .DataBound("onGridDataBound")
-                            .Save("onGridSave")
-                            .Cancel("onGridCancel")
-                        )
-                    )
-                </div>
-
-                <div id="empCount" class="employee-count">
-                    <i class="fas fa-user-check me-2"></i><span>@Localizer["LoadingEmployees"]</span>
+        <div class="grid-wrapper">
+            <div class="loading-overlay" id="gridLoadingOverlay">
+                <div style="text-align:center">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Đang tải dữ liệu...</div>
                 </div>
             </div>
+
+            @(Html.Kendo().Grid<PhoneBook.Models.Employee>()
+                        .Name("employeeGrid")
+                        .ToolBar(tools => { tools.Pdf(); tools.Excel(); })
+                        .Excel(excel => excel.FileName("DanhBa_Export.xlsx").AllPages(true))
+                        .Pdf(pdf => pdf
+                        .AllPages().AvoidLinks().PaperSize("A4").Scale(0.8)
+                        .Margin("2cm", "1cm", "1cm", "1cm").Landscape()
+                        .TemplateId("page-template").FileName("DanhBa.pdf")
+                        .ProxyURL(Url.Action("Pdf_Export_Save", "Grid")).ForceProxy(true)
+                        )
+                        .Columns(columns =>
+                        {
+                            columns.Template("<span class='row-number'></span>").Title("STT").Width(52).HtmlAttributes(new { data_field = "stt" });
+                            columns.Bound(e => e.FullName).Title("Họ và tên").Width(220);
+                            columns.Bound(e => e.WorkingPhone).Title("ĐT nội bộ").Width(155);
+                            columns.Bound(e => e.HandPhone).Title("Di động").Width(155);
+                            columns.Bound(e => e.BusinessEmail).Title("Email công ty").Width(220);
+                        })
+                        .Scrollable().Sortable()
+                        .ColumnMenu(menu => menu.Enabled(true).Filterable(false))
+                        .Groupable(false)
+                        .Resizable(resize => resize.Columns(true))
+                        .Pageable(page => page
+                        .ButtonCount(5)
+                        .Messages(m => m
+                        .ItemsPerPage("bản ghi/trang")
+                        .Display("Hiển thị {0}-{1} / {2}")
+                        .Empty("Không có dữ liệu")
+                        .First("Đầu").Last("Cuối").Next("Sau").Previous("Trước").Refresh("Tải lại")
+                        )
+                        )
+                        .DataSource(ds => ds
+                        .Ajax().ServerOperation(false).PageSize(30)
+                        .Model(m => m.Id(e => e.UserId))
+                        .Read(read => read.Action("GetAllEmployees", "Home").Type(HttpVerbs.Get))
+                        )
+                        .Events(e => e.DataBound("onGridDataBound"))
+                        )
+        </div>
+
+        <div id="empCount" class="employee-count">
+            <i class="fas fa-user-check me-1"></i><span>Đang tải...</span>
+        </div>
+    </div>
+</text>);
+    })
+    .Events(e => e.Resize("onSplitterResize"))
+)
+
+<!-- ══ NOTES SLIDE-IN PANEL ══ -->
+<div id="notesBackdrop" onclick="closeNotes()"></div>
+<div id="notesPanel">
+    <div class="notes-panel-header">
+        <h5><i class="fas fa-sticky-note me-1"></i>Ghi chú của tôi</h5>
+        <button class="btn-notes-close" onclick="closeNotes()" title="Đóng">&#215;</button>
+    </div>
+    <div class="note-search">
+        <input type="text" id="noteSearchInput" placeholder="Tìm ghi chú theo tiêu đề..." oninput="filterNotes()" />
+    </div>
+    <button class="btn-add-note" onclick="openNoteModal()">
+        <i class="fas fa-plus me-1"></i> Thêm ghi chú mới
+    </button>
+    <div class="notes-list" id="notesList">
+        <div class="notes-empty"><i class="fas fa-sticky-note"></i>Chưa có ghi chú nào</div>
+    </div>
+</div>
+
+<!-- ══ MOBILE ══ -->
+<div class="mobile-center" id="mobileCenterWrap">
+    <div class="section-header" style="flex-shrink:0">
+        <h3><i class="fas fa-users me-1" style="color:var(--brand)"></i><span id="departmentTitleMobile">Tất cả nhân viên</span></h3>
+    </div>
+    <div class="search-box" style="flex-shrink:0">
+        <input type="text" id="employeeSearchMobile" placeholder="Tìm theo tên, SĐT, email..." />
+    </div>
+    <div style="flex-shrink:0;margin-bottom:6px;display:flex;gap:6px">
+        <button onclick="mobileTabEmployees('active')" id="mBtnActive"
+                style="flex:1;padding:7px 0;border-radius:4px;border:none;background:var(--brand);color:#fff;font-size:12px;font-weight:600;cursor:pointer">
+            Đang làm việc
+        </button>
+        <button onclick="mobileTabEmployees('inactive')" id="mBtnInactive"
+                style="flex:1;padding:7px 0;border-radius:4px;border:1px solid #dee2e6;background:#fff;color:#6c757d;font-size:12px;font-weight:600;cursor:pointer">
+            Đã nghỉ việc
+        </button>
+    </div>
+    <div id="mobileEmpList" style="flex:1;overflow-y:auto;min-height:0;display:flex;flex-direction:column;gap:6px"></div>
+    <div id="empCountMobile" class="employee-count" style="flex-shrink:0">
+        <i class="fas fa-user-check me-1"></i><span>Đang tải...</span>
+    </div>
+</div>
+
+<div class="mobile-tabs">
+    <div class="tab-bar">
+        <button class="mobile-tab-btn active" id="mTabDept" onclick="mobileTab('dept')"><i class="fas fa-sitemap"></i>Phòng ban</button>
+        <button class="mobile-tab-btn" id="mTabList" onclick="mobileTab('list')"><i class="fas fa-users"></i>Danh sách</button>
+        <button class="mobile-tab-btn" id="mTabNote" onclick="mobileTab('note')">
+            <i class="fas fa-sticky-note"></i>Ghi chú
+            <span id="mNoteBadge" style="display:none;background:#e74c3c;color:#fff;border-radius:8px;font-size:9px;font-weight:700;padding:0 4px;margin-left:2px">0</span>
+        </button>
+    </div>
+</div>
+
+<div class="mobile-panel" id="mPanelDept">
+    <div class="mobile-panel-header"><i class="fas fa-sitemap"></i>Phòng ban</div>
+    <div class="mobile-panel-body">
+        @(Html.Kendo().TreeView()
+                .Name("deptTreeMobile")
+                .DataTextField("text")
+                .DataSource(ds => ds
+                .Read(r => r.Url(Url.Action("GetDepartments", "Home")))
+                .Model(m => { m.Id("id"); m.Children("items"); })
+                )
+                .Events(e => e.Select("onDeptSelectMobile"))
+                )
+    </div>
+</div>
+
+<div class="mobile-panel" id="mPanelNote">
+    <div class="mobile-panel-header"><i class="fas fa-sticky-note"></i>Ghi chú của tôi</div>
+    <div class="mobile-panel-body">
+        <div class="note-search">
+            <input type="text" id="noteSearchMobile" placeholder="Tìm ghi chú..." oninput="filterNotesMobile()" />
+        </div>
+        <button class="btn-add-note" onclick="openNoteModal()"><i class="fas fa-plus me-1"></i>Thêm ghi chú mới</button>
+        <div class="notes-list" id="notesListMobile" style="min-height:100px">
+            <div class="notes-empty"><i class="fas fa-sticky-note"></i>Chưa có ghi chú nào</div>
         </div>
     </div>
 </div>
 
-<!-- ===================== SCRIPTS ===================== -->
+<!-- NOTE MODAL -->
+<div class="note-modal-overlay" id="noteModalOverlay">
+    <div class="note-modal">
+        <div class="note-modal-header">
+            <h5 id="noteModalTitle"><i class="fas fa-sticky-note me-2"></i>Thêm ghi chú</h5>
+            <button class="btn-modal-close" onclick="closeNoteModal()">&#215;</button>
+        </div>
+        <div class="note-modal-body">
+            <input type="hidden" id="noteModalId" value="0" />
+            <div class="mb-3">
+                <label>Tiêu đề <span style="color:#e74c3c">*</span></label>
+                <input type="text" id="noteModalTitleInput" maxlength="200" placeholder="Nhập tiêu đề..." />
+                <div id="noteModalTitleError" style="color:#e74c3c;font-size:11px;margin-top:3px;display:none">Tiêu đề không được để trống.</div>
+            </div>
+            <div>
+                <label>Nội dung</label>
+                <textarea id="noteModalDescInput" rows="5" placeholder="Nhập nội dung..."></textarea>
+            </div>
+        </div>
+        <div class="note-modal-footer">
+            <button class="btn-note-cancel" onclick="closeNoteModal()">Huỷ</button>
+            <button class="btn-note-save" onclick="saveNote()"><i class="fas fa-save me-1"></i>Lưu</button>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script type="x/kendo-template" id="page-template">
         <div class="page-template">
-            <div class="header">
-                <div style="float:right">@Localizer["PdfFooterText"]</div>
-                PhoneBook
-            </div>
+            <div class="header"><div style="float:right">SAGS - Danh bạ nội bộ</div>PhoneBook</div>
             <div class="watermark">SAGS</div>
-            <div class="footer">@Localizer["PdfFooterText"]</div>
+            <div class="footer">SAGS - Danh bạ nội bộ</div>
         </div>
     </script>
 
     <script>
-        var IsAdmin = @Json.Serialize(isAdmin);
-        var rootDepartmentName = "";
-        var currentDepartmentId = null;
-        var currentTab = "active";
+        var currentDeptId = null;
+        var currentTab    = "active";
+        var allNotes      = [];
+        var notesOpen     = false;
 
-        function showLoading() {
-            $("#gridLoadingOverlay").addClass("show");
+        function setTitle(text) {
+            $("#departmentTitle, #departmentTitleMobile").text(text || "Tất cả nhân viên");
         }
 
-        function hideLoading() {
-            setTimeout(function() {
-                $("#gridLoadingOverlay").removeClass("show");
-            }, 1000); 
+        function isRootNode(node) {
+            return node.parentId === -1 || node.parentId === null || node.parentId === undefined;
         }
 
+        /* ══ NOTES PANEL ══ */
+        function openNotes() {
+            notesOpen = true;
+            document.getElementById("notesPanel").classList.add("open");
+            document.getElementById("notesBackdrop").classList.add("show");
+            document.getElementById("btnToggleNotes").classList.add("active");
+            loadNotes();
+        }
+        function closeNotes() {
+            notesOpen = false;
+            document.getElementById("notesPanel").classList.remove("open");
+            document.getElementById("notesBackdrop").classList.remove("show");
+            document.getElementById("btnToggleNotes").classList.remove("active");
+        }
+        function toggleNotes() { if (notesOpen) closeNotes(); else openNotes(); }
+
+        /* ══ INIT ══ */
         $(document).ready(function () {
             kendo.pdf.defineFont({
-                "DejaVu Sans": "https://kendo.cdn.telerik.com/2023.1.117/styles/fonts/DejaVu/DejaVuSans.ttf",
-                "DejaVu Sans|Bold": "https://kendo.cdn.telerik.com/2023.1.117/styles/fonts/DejaVu/DejaVuSans-Bold.ttf",
-                "DejaVu Sans|Italic": "https://kendo.cdn.telerik.com/2023.1.117/styles/fonts/DejaVu/DejaVuSans-Oblique.ttf",
+                "DejaVu Sans"            : "https://kendo.cdn.telerik.com/2023.1.117/styles/fonts/DejaVu/DejaVuSans.ttf",
+                "DejaVu Sans|Bold"       : "https://kendo.cdn.telerik.com/2023.1.117/styles/fonts/DejaVu/DejaVuSans-Bold.ttf",
+                "DejaVu Sans|Italic"     : "https://kendo.cdn.telerik.com/2023.1.117/styles/fonts/DejaVu/DejaVuSans-Oblique.ttf",
                 "DejaVu Sans|Bold|Italic": "https://kendo.cdn.telerik.com/2023.1.117/styles/fonts/DejaVu/DejaVuSans-BoldOblique.ttf"
             });
 
-            const grid = $("#employeeGrid").data("kendoGrid");
-
-            setTimeout(function() {
-                const tree = $("#deptTree").data("kendoTreeView");
-                if (tree) {
-                    const rootNode = tree.element.find("li:first");
-                    if (rootNode.length > 0) {
-                        tree.select(rootNode);
-                        tree.trigger("select", { node: rootNode[0] });
-                    }
-                }
-            }, 500);
+            // Đợi grid sẵn sàng rồi mới load
+            setTimeout(function () { loadEmployeesByTab(); }, 100);
 
             $("#employeeSearch").on("input", function () {
                 showLoading();
-                const val = $(this).val().toLowerCase();
+                var val = $(this).val().toLowerCase();
+                var grid = $("#employeeGrid").data("kendoGrid");
+                if (!grid) return;
                 grid.dataSource.filter(!val ? {} : {
                     logic: "or",
                     filters: [
-                        { field: "FullName", operator: "contains", value: val },
-                        { field: "WorkingPhone", operator: "contains", value: val },
-                        { field: "HandPhone", operator: "contains", value: val },
+                        { field: "FullName",      operator: "contains", value: val },
+                        { field: "WorkingPhone",  operator: "contains", value: val },
+                        { field: "HandPhone",     operator: "contains", value: val },
                         { field: "BusinessEmail", operator: "contains", value: val }
                     ]
                 });
                 hideLoading();
             });
 
+            $("#employeeSearchMobile").on("input", function () {
+                var val = $(this).val().toLowerCase();
+                $("#mobileEmpList > div").each(function () {
+                    $(this).toggle(!val || $(this).text().toLowerCase().indexOf(val) !== -1);
+                });
+            });
+
+            $("#noteModalOverlay").on("click", function (e) {
+                if ($(e.target).is("#noteModalOverlay")) closeNoteModal();
+            });
+
+            loadNotes();
             adjustGridHeight();
             $(window).on("resize", adjustGridHeight);
         });
 
+        function onSplitterResize() { adjustGridHeight(); }
+
+        /* ══ LOADING ══ */
+        function showLoading() { $("#gridLoadingOverlay").addClass("show"); }
+        function hideLoading() { setTimeout(function () { $("#gridLoadingOverlay").removeClass("show"); }, 500); }
+
+        /* ══ TABS ══ */
         function onTabSelect(e) {
-            const selectedTab = $(e.item).attr("id");
-            currentTab = selectedTab === "tab-active" ? "active" : "inactive";      
+            currentTab = $(e.item).attr("id") === "tab-active" ? "active" : "inactive";
             $("#employeeSearch").val("");
-            
             loadEmployeesByTab();
         }
 
+        /* ══ TREE — Desktox ══ */
         function onTreeDataBound(e) {
-            const tree = this;
-            const rootNode = tree.element.find("li:first");
-            
-            if (rootNode.length > 0) {
-                const rootDataItem = tree.dataItem(rootNode);
-                if (rootDataItem) {
-                    rootDepartmentName = rootDataItem.text || "";
-                    updateDepartmentTitle(rootDepartmentName, true);
-                }
-                
-                tree.expand(rootNode);
-                
-                setTimeout(function() {
-                    tree.select(rootNode);
-                    tree.trigger("select", { node: rootNode[0] });
-                }, 100);
-            }
+            var tree = this;
+            var root = tree.element.find("li:first");
+            if (!root.length) return;
+            tree.expand(root);
+            // KHÔNG gọi loadEmployeesByTab ở đây — đã gọi trong ready()
         }
 
-        function updateDepartmentTitle(departmentName, isRoot = false) {
-            const title = departmentName || "@Localizer["EmployeeListTitle"]";
-            $("#departmentTitle").text(title);
-        }
-
-        function getDepartmentPath(tree, node) {
-            const path = [];
-            let currentNode = node;
-            
-            while (currentNode) {
-                const dataItem = tree.dataItem(currentNode);
-                if (dataItem) {
-                    path.unshift(dataItem.text);
-                    const parentNode = tree.parent(currentNode);
-                    if (parentNode && parentNode.length > 0) {
-                        currentNode = parentNode;
-                    } else {
-                        break;
-                    }
-                } else {
-                    break;
-                }
+        function getDeptPath(tree, node) {
+            var path = [], cur = node;
+            while (cur) {
+                var d = tree.dataItem(cur);
+                if (!d) break;
+                path.unshift(d.text);
+                var par = tree.parent(cur);
+                if (par && par.length) cur = par; else break;
             }
-            
             return path;
         }
+        async function onDeptSelect(e) {
+            var tree = $("#deptTree").data("kendoTreeView");
+            var node = tree.dataItem(e.node);
 
-        function onGridSave(e) {
+            if (!node) return;
+            if (isRootNode(node)) {
+                currentDeptId = null;
+                tree.select($());
+                setTitle("Tất cả nhân viên");
+                $("#employeeSearch").val("");
+                showLoading();
+                await loadEmployeesByTab();
+                return;
+            }
+
+            // Bấm lại node đang chọn → về tất cả
+            if (currentDeptId !== null && currentDeptId === node.id) {
+                currentDeptId = null;
+                tree.select($());
+                setTitle("Tất cả nhân viên");
+                $("#employeeSearch").val("");
+                showLoading();
+                await loadEmployeesByTab();
+                return;
+            }
+
+            // Bấm node mới → load theo phòng ban
+            currentDeptId = node.id;
+            $("#employeeSearch").val("");
+            var path  = getDeptPath(tree, e.node);
+            var title = path.length <= 1 ? path[0] : path.slice(-2).join(" - ");
+            setTitle(title);
             showLoading();
-            setTimeout(function () {
-                const grid = $("#employeeGrid").data("kendoGrid");
-                if (grid) onGridDataBound.call(grid);
-                hideLoading();
-            }, 200);
+            await loadEmployeesByTab();
         }
 
-        function onGridCancel(e) {
-            setTimeout(function () {
-                const grid = $("#employeeGrid").data("kendoGrid");
-                if (grid) onGridDataBound.call(grid);
-            }, 200);
+        /* ══ TREE — Mobile ══ */
+        async function onDeptSelectMobile(e) {
+            var tree = $("#deptTreeMobile").data("kendoTreeView");
+            var node = tree.dataItem(e.node);
+            if (!node) return;
+            if (isRootNode(node)) {
+                currentDeptId = null;
+                tree.select($());
+                setTitle("Tất cả nhân viên");
+                mobileTab("list");
+                await loadEmployeesByTab();
+                return;
+            }
+
+            if (currentDeptId !== null && currentDeptId === node.id) {
+                currentDeptId = null;
+                tree.select($());
+                setTitle("Tất cả nhân viên");
+                mobileTab("list");
+                await loadEmployeesByTab();
+                return;
+            }
+
+            currentDeptId = node.id;
+            var path  = getDeptPath(tree, e.node);
+            var title = path.length <= 1 ? path[0] : path.slice(-2).join(" - ");
+            setTitle(title);
+            mobileTab("list");
+            await loadEmployeesByTab();
         }
 
+        /* ══ GRID ══ */
         function adjustGridHeight() {
-            const gridWrapper = $(".grid-wrapper");
-            const grid = $("#employeeGrid").data("kendoGrid");
-            if (!grid) return;
-
-            const h = gridWrapper.height();
-            const g = grid.wrapper;
-            const header = g.find(".k-grid-header").outerHeight();
-            const pager = g.find(".k-grid-pager").outerHeight();
-            g.find(".k-grid-content").height(h - header - pager - 10);
+            var g = $("#employeeGrid").data("kendoGrid");
+            if (!g) return;
+            var h      = $(".grid-wrapper").height();
+            var header = g.wrapper.find(".k-grid-header").outerHeight() || 0;
+            var pager  = g.wrapper.find(".k-grid-pager").outerHeight()  || 0;
+            g.wrapper.find(".k-grid-content").height(h - header - pager - 6);
         }
-
         function onGridDataBound(e) {
-            const grid = this;
-            const rows = grid.items();
-            let index = (grid.dataSource.page() - 1) * grid.dataSource.pageSize();
-            rows.each(function () {
-                $(this).find(".row-number").text(++index);
-            });
+            var grid = this, rows = grid.items();
+            var idx  = (grid.dataSource.page() - 1) * grid.dataSource.pageSize();
+            rows.each(function () { $(this).find(".row-number").text(++idx); });
             updateEmployeeCount(grid.dataSource.total());
             adjustGridHeight();
             hideLoading();
         }
-
         function updateEmployeeCount(count) {
-            const statusText = currentTab === "active" ? "@Localizer["TotalEmployees"]" : "@Localizer["TotalInactiveEmployees"]";
-            $("#empCount").html(`<i class="fas fa-user-check me-2"></i>${statusText} <strong>${count}</strong>`);
+            var label = currentTab === "active" ? "Đang làm việc:" : "Đã nghỉ việc:";
+            var html  = '<i class="fas fa-user-check me-1"></i>' + label + ' <strong>' + count + '</strong>';
+            $("#empCount, #empCountMobile").html(html);
         }
-
         async function loadEmployeesByTab() {
             showLoading();
-            const grid = $("#employeeGrid").data("kendoGrid");
-            
-            let url;
-            if (currentDepartmentId === null || currentDepartmentId === -1 || currentDepartmentId === "-1") {
-                url = currentTab === "active" 
-                    ? "/Home/GetAllEmployees" 
-                    : "/Home/GetAllInactiveEmployees";
+            var grid = $("#employeeGrid").data("kendoGrid");
+            var url;
+            if (currentDeptId === null) {
+                url = currentTab === "active" ? "/Home/GetAllEmployees" : "/Home/GetAllInactiveEmployees";
             } else {
                 url = currentTab === "active"
-                    ? `/Home/GetEmployeesByDepartment?departmentId=${currentDepartmentId}`
-                    : `/Home/GetInactiveEmployeesByDepartment?departmentId=${currentDepartmentId}`;
+                    ? "/Home/GetEmployeesByDepartment?departmentId="        + currentDeptId
+                    : "/Home/GetInactiveEmployeesByDepartment?departmentId=" + currentDeptId;
             }
-
             try {
-                const res = await fetch(url);
-                const data = await res.json();
-                grid.dataSource.data(data);
+                var res  = await fetch(url);
+                var data = await res.json();
+                if (grid) grid.dataSource.data(data);
+                renderMobileCards(data);
                 updateEmployeeCount(data.length);
-                hideLoading();
-            } catch {
-                $("#empCount").html(`<i class="fas fa-exclamation-triangle me-2"></i>@Localizer["LoadError"]`);
-                hideLoading();
-            }
+            } catch (ex) {
+                $("#empCount, #empCountMobile").html('<i class="fas fa-exclamation-triangle me-1"></i>Lỗi tải dữ liệu');
+            } finally { hideLoading(); }
         }
 
-        async function onDeptSelect(e) {
-            showLoading();
-            const tree = $("#deptTree").data("kendoTreeView");
-            const node = tree.dataItem(e.node);
-            const grid = $("#employeeGrid").data("kendoGrid");
-            $("#employeeSearch").val("");
-            currentDepartmentId = node.id;
-            const path = getDepartmentPath(tree, e.node);
-            let title = "";
-            if (path.length === 1) {
-                title = path[0];
-            } else {
-                const shortPath = path.slice(-2);
-                title = shortPath.join(" - ");
+        /* ══ MOBILE EMPLOYEES ══ */
+        function renderMobileCards(data) {
+            var $w = $("#mobileEmpList");
+            if (!data || !data.length) {
+                $w.html('<div style="text-align:center;color:#adb5bd;padding:24px">Không có dữ liệu</div>');
+                return;
             }
-            updateDepartmentTitle(title, false);
-            await loadEmployeesByTab();
+            var html = "";
+            data.forEach(function (emp) {
+                html += '<div style="background:#fff;border:1px solid #e9ecef;border-radius:8px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.06)">'
+                      + '<div style="font-weight:700;color:#2c3e50;margin-bottom:4px">' + escapeHtml(emp.FullName || "") + '</div>'
+                      + (emp.WorkingPhone  ? '<div style="font-size:12px;color:#555"><i class="fas fa-phone me-1" style="color:var(--brand)"></i>'      + escapeHtml(emp.WorkingPhone)  + '</div>' : '')
+                      + (emp.HandPhone     ? '<div style="font-size:12px;color:#555"><i class="fas fa-mobile-alt me-1" style="color:var(--brand)"></i>'  + escapeHtml(emp.HandPhone)     + '</div>' : '')
+                      + (emp.BusinessEmail ? '<div style="font-size:12px;color:#555"><i class="fas fa-envelope me-1" style="color:var(--brand)"></i>'    + escapeHtml(emp.BusinessEmail) + '</div>' : '')
+                      + '</div>';
+            });
+            $w.html(html);
+        }
+        function mobileTabEmployees(tab) {
+            currentTab = tab;
+            var on  = "flex:1;padding:7px 0;border-radius:4px;border:none;background:var(--brand);color:#fff;font-size:12px;font-weight:600;cursor:pointer";
+            var off = "flex:1;padding:7px 0;border-radius:4px;border:1px solid #dee2e6;background:#fff;color:#6c757d;font-size:12px;font-weight:600;cursor:pointer";
+            document.getElementById("mBtnActive").style.cssText   = tab === "active"   ? on : off;
+            document.getElementById("mBtnInactive").style.cssText = tab === "inactive" ? on : off;
+            loadEmployeesByTab();
+        }
+
+        /* ══ MOBILE TABS ══ */
+        function mobileTab(tab) {
+            $(".mobile-tab-btn").removeClass("active");
+            $(".mobile-panel").removeClass("show");
+            $("#mobileCenterWrap").removeClass("show");
+            $("#mTab" + tab.charAt(0).toUpperCase() + tab.slice(1)).addClass("active");
+            if      (tab === "dept") { $("#mPanelDept").addClass("show"); }
+            else if (tab === "note") { $("#mPanelNote").addClass("show"); loadNotes(); }
+            else                     { $("#mobileCenterWrap").addClass("show"); }
+        }
+
+        /* ══ NOTES ══ */
+        async function loadNotes() {
+            try {
+                var res  = await fetch("/api/Note/list");
+                allNotes = await res.json();
+                renderNotes(allNotes, "#notesList");
+                renderNotes(allNotes, "#notesListMobile");
+                updateNoteBadge(allNotes.length);
+            } catch (ex) {
+                var err = '<div class="notes-empty"><i class="fas fa-exclamation-circle"></i>Lỗi tải ghi chú</div>';
+                $("#notesList, #notesListMobile").html(err);
+            }
+        }
+        function updateNoteBadge(count) {
+            $("#noteBadge").text(count);
+            if (count > 0) $("#btnToggleNotes").addClass("has-notes");
+            else            $("#btnToggleNotes").removeClass("has-notes");
+            if (count > 0) { $("#mNoteBadge").text(count).show(); }
+            else            { $("#mNoteBadge").hide(); }
+        }
+
+        function renderNotes(notes, sel) {
+            var $list = $(sel);
+            if (!notes || !notes.length) {
+                $list.html('<div class="notes-empty"><i class="fas fa-sticky-note"></i>Chưa có ghi chú nào</div>');
+                return;
+            }
+            var html = "";
+            notes.forEach(function (n) {
+                var dt = new Date(n.UpdatedAt).toLocaleString("vi-VN", {
+                    day: "2-digit", month: "2-digit", year: "numeric",
+                    hour: "2-digit", minute: "2-digit"
+                });
+                // Dùng noteId để tra cứu raw data khi edit — KHÔNG truyền text đã escape vào onclick
+                html += '<div class="note-item" data-id="' + n.NoteId + '">'
+                      +   '<div class="note-item-title">'  + escapeHtml(n.Title)           + '</div>'
+                      +   (n.Description ? '<div class="note-item-desc">' + escapeHtml(n.Description) + '</div>' : '')
+                      +   '<div class="note-item-date"><i class="fas fa-clock me-1"></i>' + dt + '</div>'
+                      +   '<div class="note-item-actions">'
+                      +     '<button class="btn-note-action btn-note-edit"   onclick="editNote('   + n.NoteId + ')" title="Sửa"><i class="fas fa-pen"></i></button>'
+                      +     '<button class="btn-note-action btn-note-delete" onclick="deleteNote(' + n.NoteId + ')" title="Xoá"><i class="fas fa-trash"></i></button>'
+                      +   '</div>'
+                      + '</div>';
+            });
+            $list.html(html);
+        }
+
+        function filterNotes()       { applyFilter($("#noteSearchInput").val(),  "#notesList"); }
+        function filterNotesMobile() { applyFilter($("#noteSearchMobile").val(), "#notesListMobile"); }
+        function applyFilter(q, sel) {
+            q = (q || "").toLowerCase().trim();
+            $(sel + " .note-item").each(function () {
+                $(this).toggleClass("note-hidden",
+                    q !== "" && $(this).find(".note-item-title").text().toLowerCase().indexOf(q) === -1);
+            });
+        }
+
+        /* ══ NOTE MODAL ══ */
+        function openNoteModal(id, title, desc) {
+            id    = id    || 0;
+            title = title || "";
+            desc  = desc  || "";
+            $("#noteModalId").val(id);
+            $("#noteModalTitleInput").val(title);   // raw text — input hiển thị đúng
+            $("#noteModalDescInput").val(desc);
+            $("#noteModalTitleError").hide();
+            $("#noteModalTitle").html(id === 0
+                ? '<i class="fas fa-plus me-2"></i>Thêm ghi chú'
+                : '<i class="fas fa-pen me-2"></i>Sửa ghi chú');
+            $("#noteModalOverlay").addClass("show");
+            setTimeout(function () { $("#noteModalTitleInput").focus(); }, 100);
+        }
+        function closeNoteModal() { $("#noteModalOverlay").removeClass("show"); }
+
+        // ★ Tra cứu RAW data từ allNotes thay vì dùng text đã escape
+        function editNote(noteId) {
+            var note = allNotes.find(function (n) { return n.NoteId === noteId; });
+            if (!note) return;
+            openNoteModal(note.NoteId, note.Title, note.Description || "");
+        }
+
+        async function saveNote() {
+            var id    = parseInt($("#noteModalId").val());
+            var title = $("#noteModalTitleInput").val().trim();
+            var desc  = $("#noteModalDescInput").val().trim();
+            if (!title) { $("#noteModalTitleError").show(); $("#noteModalTitleInput").focus(); return; }
+            $("#noteModalTitleError").hide();
+            try {
+                var payload = id === 0
+                    ? { Title: title, Description: desc }
+                    : { NoteId: id, Title: title, Description: desc };
+                var res = await fetch(id === 0 ? "/api/Note/add" : "/api/Note/update", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) { closeNoteModal(); await loadNotes(); }
+                else { var err = await res.json(); alert(err.message || "Lỗi khi lưu."); }
+            } catch (ex) { alert("Lỗi kết nối."); }
+        }
+
+        async function deleteNote(noteId) {
+            if (!confirm("Bạn có chắc muốn xoá ghi chú này không?")) return;
+            try {
+                var res = await fetch("/api/Note/delete/" + noteId, { method: "DELETE" });
+                if (res.ok) await loadNotes();
+                else alert("Xoá thất bại.");
+            } catch (ex) { alert("Lỗi kết nối."); }
+        }
+
+        function escapeHtml(t) {
+            return String(t)
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
     </script>
-    <script>
-    history.pushState(null, null, location.href);
-    window.onpopstate = function () {
-        history.go(1);
-    };
-</script>
 }

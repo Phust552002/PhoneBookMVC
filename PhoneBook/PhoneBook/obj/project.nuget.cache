@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "qf1Th5T0qq0=",
+  "dgSpecHash": "IebKZPq100o=",
   "success": true,
   "projectFilePath": "C:\\Users\\Admin\\Documents\\GitHub\\PhoneBook\\PhoneBook\\PhoneBook\\PhoneBook.csproj",
   "expectedPackageFiles": [
@@ -79,8 +79,8 @@
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.http.abstractions\\2.3.0\\microsoft.aspnetcore.http.abstractions.2.3.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.http.extensions\\2.3.0\\microsoft.aspnetcore.http.extensions.2.3.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.3.0\\microsoft.aspnetcore.http.features.2.3.0.nupkg.sha512",
-    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\8.0.22\\microsoft.aspnetcore.jsonpatch.8.0.22.nupkg.sha512",
-    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.mvc.newtonsoftjson\\8.0.22\\microsoft.aspnetcore.mvc.newtonsoftjson.8.0.22.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\8.0.25\\microsoft.aspnetcore.jsonpatch.8.0.25.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.mvc.newtonsoftjson\\8.0.25\\microsoft.aspnetcore.mvc.newtonsoftjson.8.0.25.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.razor.language\\6.0.24\\microsoft.aspnetcore.razor.language.6.0.24.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.webutilities\\2.3.0\\microsoft.aspnetcore.webutilities.2.3.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\7.0.0\\microsoft.bcl.asyncinterfaces.7.0.0.nupkg.sha512",
@@ -220,7 +220,11 @@
     "C:\\Users\\Admin\\.nuget\\packages\\telerik.fonticons\\4.0.0\\telerik.fonticons.4.0.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\telerik.svgicons\\4.0.0\\telerik.svgicons.4.0.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\telerik.ui.for.aspnet.core\\2024.4.1112\\telerik.ui.for.aspnet.core.2024.4.1112.nupkg.sha512",
-    "C:\\Users\\Admin\\.nuget\\packages\\telerik.zip\\2024.4.1106\\telerik.zip.2024.4.1106.nupkg.sha512"
+    "C:\\Users\\Admin\\.nuget\\packages\\telerik.zip\\2024.4.1106\\telerik.zip.2024.4.1106.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.22\\microsoft.windowsdesktop.app.ref.8.0.22.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.22\\microsoft.netcore.app.ref.8.0.22.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.22\\microsoft.aspnetcore.app.ref.8.0.22.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.22\\microsoft.netcore.app.host.win-x64.8.0.22.nupkg.sha512"
   ],
   "logs": []
 }

@@ -47,11 +47,6 @@ namespace PhoneBook.Services
 
             return employee;
         }
-        public async Task<List<int>> GetUserRolesAsync(int userId)
-        {
-            var roles = await _repo.GetUserRolesAsync(userId);
-            return roles;
-        }
 
         public string HashPassword(string password)
         {
